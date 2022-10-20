@@ -1,8 +1,8 @@
-#include "objects/CSGrammar.h"
+#include "objects/CFGrammar.h"
 #include <iostream>
 using namespace std;
 
 int main() {
-	CSGrammar grammar("input.txt");
+	CFGrammar grammar("input.txt");
 	std::cout << "Regular Language Problem";
 }

@@ -1,6 +1,6 @@
-#include "CSGrammar.h"
+#include "CFGrammar.h"
 
-CSGrammar::CSGrammar(std::string filename) { // конструктор из файла
+CFGrammar::CFGrammar(std::string filename) { // РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ РёР· С„Р°Р№Р»Р°
 	std::ifstream file(filename);
 	if (!file) {
 		std::cout << "error: cannot find file named " + filename;

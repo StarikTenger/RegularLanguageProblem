@@ -10,9 +10,9 @@
 #include <string>
 #include <vector>
 
-class CSGrammar {
+class CFGrammar {
   public:
-	CSGrammar(std::string filename); // конструктор из файла
+	CFGrammar(std::string filename); // конструктор из файла
 	std::map<char, aux::letter_class>
 		letters; // Связь: буква -> назначение буквы
 	std::map<char, std::vector<std::string>>
