@@ -10,6 +10,9 @@ project (little_onion)
 # Create a sources variable with a link to all cpp files to compile
 set(SOURCES
     src/main.cpp
+    src/objects/AuxLib.cpp
+	src/objects/CFGrammar.cpp
+	src/objects/Parcer.cpp
 )
 
 # Add an executable with the above sources
@@ -20,4 +23,5 @@ add_executable(little_onion ${SOURCES})
 target_include_directories(little_onion
     PRIVATE
         ${PROJECT_SOURCE_DIR}/include
+        ${PROJECT_SOURCE_DIR}/include/objects
 )
