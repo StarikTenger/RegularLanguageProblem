@@ -1,45 +1,50 @@
 #pragma once
+#include "AuxLib.h"
+#include <fstream>
 #include <iostream>
 #include <map>
-#include <vector>
 #include <queue>
-#include <string>
 #include <set>
-#include <fstream>
 #include <sstream>
-#include "AuxLib.h"
+#include <string>
+#include <vector>
 
 class Parcer {
-private:
-	// Считывание символа из очереди
+  private:
+	// РЎС‡РёС‚С‹РІР°РЅРёРµ СЃРёРјРІРѕР»Р° РёР· РѕС‡РµСЂРµРґРё
 	bool get_ch(std::queue<char>* source, char sym);
 
-	// Считывание символа из строки
+	// РЎС‡РёС‚С‹РІР°РЅРёРµ СЃРёРјРІРѕР»Р° РёР· СЃС‚СЂРѕРєРё
 	bool get_ch(std::string* source, char sym);
 
-	// Считывание префикса из строки
+	// РЎС‡РёС‚С‹РІР°РЅРёРµ РїСЂРµС„РёРєСЃР° РёР· СЃС‚СЂРѕРєРё
 	bool get_str(std::string* source, std::string pref);
 
-	// Проверка на букву
+	// РџСЂРѕРІРµСЂРєР° РЅР° Р±СѓРєРІСѓ
 	bool is_letter(char c);
 
-	// Проверка на цифру
+	// РџСЂРѕРІРµСЂРєР° РЅР° С†РёС„СЂСѓ
 	bool is_num(char c);
 
-	// Считывание числа из строки
+	// РЎС‡РёС‚С‹РІР°РЅРёРµ С‡РёСЃР»Р° РёР· СЃС‚СЂРѕРєРё
 	bool get_num(std::string* s, int* ans);
 
-	// Очередь из строки
+	// РћС‡РµСЂРµРґСЊ РёР· СЃС‚СЂРѕРєРё
 	void make_queue(std::queue<char>* q, std::string* s);
 
-	// Функция удаления пробелов из строки
+	// Р¤СѓРЅРєС†РёСЏ СѓРґР°Р»РµРЅРёСЏ РїСЂРѕР±РµР»РѕРІ РёР· СЃС‚СЂРѕРєРё
 	std::string remove_spaces(std::string s);
 
-public:
-	// Парсинг термов
-	bool parce_terms(std::stringstream& s, std::map<char, aux::letter_class>& letters);
-	// Парсинг нетерминалов
-	bool parce_nonterms(std::stringstream& s, std::map<char, aux::letter_class>& letters);
-	// Парсинг продукций
-	bool parce_productions(std::stringstream& s, std::map<char, std::vector<std::string>>& productions, std::map<char, aux::letter_class>& letters);
+  public:
+	// РџР°СЂСЃРёРЅРі С‚РµСЂРјРѕРІ
+	bool parce_terms(std::stringstream& s,
+					 std::map<char, aux::letter_class>& letters);
+	// РџР°СЂСЃРёРЅРі РЅРµС‚РµСЂРјРёРЅР°Р»РѕРІ
+	bool parce_nonterms(std::stringstream& s,
+						std::map<char, aux::letter_class>& letters);
+	// РџР°СЂСЃРёРЅРі РїСЂРѕРґСѓРєС†РёР№
+	bool parce_productions(
+		std::stringstream& s,
+		std::map<char, std::vector<std::string>>& productions,
+		std::map<char, aux::letter_class>& letters);
 };

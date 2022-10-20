@@ -1,18 +1,20 @@
 #pragma once
-#include <iostream>
-#include <map>
-#include <vector>
-#include <queue>
-#include <string>
-#include <set>
-#include <fstream>
-#include <sstream>
 #include "AuxLib.h"
 #include "Parcer.h"
+#include <fstream>
+#include <iostream>
+#include <map>
+#include <queue>
+#include <set>
+#include <sstream>
+#include <string>
+#include <vector>
 
 class CSGrammar {
-public:
-	CSGrammar(std::string filename); // конструктор из файла
-	std::map<char, aux::letter_class> letters; // Связь: буква -> назначение буквы
-	std::map<char, std::vector<std::string>> productions; // Связь: нонтерм -> набор продукций нонтерма
+  public:
+	CSGrammar(std::string filename); // РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ РёР· С„Р°Р№Р»Р°
+	std::map<char, aux::letter_class>
+		letters; // РЎРІСЏР·СЊ: Р±СѓРєРІР° -> РЅР°Р·РЅР°С‡РµРЅРёРµ Р±СѓРєРІС‹
+	std::map<char, std::vector<std::string>>
+		productions; // РЎРІСЏР·СЊ: РЅРѕРЅС‚РµСЂРј -> РЅР°Р±РѕСЂ РїСЂРѕРґСѓРєС†РёР№ РЅРѕРЅС‚РµСЂРјР°
 };

@@ -1,9 +1,10 @@
 #pragma once
 
 class aux {
-public:
-	// Назначение буквы 
-	static enum class letter_class {
+  public:
+	// РќР°Р·РЅР°С‡РµРЅРёРµ Р±СѓРєРІС‹
+	static enum class letter_class
+	{
 		undefined,
 		term,
 		nonterm

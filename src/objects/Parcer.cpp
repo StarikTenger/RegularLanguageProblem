@@ -8,7 +8,7 @@ bool Parcer::get_ch(std::queue<char>* source, char sym) {
 	return true;
 }
 
-// Считывание символа из строки
+// РЎС‡РёС‚С‹РІР°РЅРёРµ СЃРёРјРІРѕР»Р° РёР· СЃС‚СЂРѕРєРё
 bool Parcer::get_ch(std::string* source, char sym) {
 	if (source->size() == 0 || source->operator[](0) != sym) {
 		return false;
@@ -17,26 +17,27 @@ bool Parcer::get_ch(std::string* source, char sym) {
 	return true;
 }
 
-// Считывание префикса из строки
+// РЎС‡РёС‚С‹РІР°РЅРёРµ РїСЂРµС„РёРєСЃР° РёР· СЃС‚СЂРѕРєРё
 bool Parcer::get_str(std::string* source, std::string pref) {
-	if (source->size() < pref.size() || source->substr(0, pref.size()) != pref) {
+	if (source->size() < pref.size() ||
+		source->substr(0, pref.size()) != pref) {
 		return false;
 	}
 	*source = source->substr(pref.size());
 	return true;
 }
 
-// Проверка на букву
+// РџСЂРѕРІРµСЂРєР° РЅР° Р±СѓРєРІСѓ
 bool Parcer::is_letter(char c) {
 	return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z');
 }
 
-// Проверка на цифру
+// РџСЂРѕРІРµСЂРєР° РЅР° С†РёС„СЂСѓ
 bool Parcer::is_num(char c) {
 	return (c >= '0' && c <= '9');
 }
 
-// Считывание числа из строки
+// РЎС‡РёС‚С‹РІР°РЅРёРµ С‡РёСЃР»Р° РёР· СЃС‚СЂРѕРєРё
 bool Parcer::get_num(std::string* s, int* ans) {
 	int i = 0;
 	int cur_ans = 0;
@@ -54,14 +55,14 @@ bool Parcer::get_num(std::string* s, int* ans) {
 	return i != 0;
 }
 
-// Очередь из строки
+// РћС‡РµСЂРµРґСЊ РёР· СЃС‚СЂРѕРєРё
 void Parcer::make_queue(std::queue<char>* q, std::string* s) {
 	for (int i = 0; i != s->size(); i++) {
 		q->push(s->operator[](i));
 	}
 }
 
-// Функция удаления пробелов из строки
+// Р¤СѓРЅРєС†РёСЏ СѓРґР°Р»РµРЅРёСЏ РїСЂРѕР±РµР»РѕРІ РёР· СЃС‚СЂРѕРєРё
 std::string Parcer::remove_spaces(std::string s) {
 	std::string ans;
 	for (int i = 0; i < s.size(); i++) {
@@ -69,55 +70,55 @@ std::string Parcer::remove_spaces(std::string s) {
 	}
 	return ans;
 }
-// Парсинг термов
-bool Parcer::parce_terms(std::stringstream& s, std::map<char, aux::letter_class>& letters) {
+// РџР°СЂСЃРёРЅРі С‚РµСЂРјРѕРІ
+bool Parcer::parce_terms(std::stringstream& s,
+						 std::map<char, aux::letter_class>& letters) {
 	std::string inp;
 	getline(s, inp);
 	inp = remove_spaces(inp);
-	if (!get_str(&inp, "terms="))
-		return false;
+	if (!get_str(&inp, "terms=")) return false;
 	while (inp.size()) {
 		char letter = inp[0];
 		inp = inp.substr(1);
 		bool getted = true;
 		getted &= (!inp.size() || get_ch(&inp, ','));
-		if (!getted)
-			return getted;
+		if (!getted) return getted;
 		letters[letter] = aux::letter_class::term;
 	}
 	return true;
 }
-// Парсинг нетерминалов
-bool Parcer::parce_nonterms(std::stringstream& s, std::map<char, aux::letter_class>& letters) {
+// РџР°СЂСЃРёРЅРі РЅРµС‚РµСЂРјРёРЅР°Р»РѕРІ
+bool Parcer::parce_nonterms(std::stringstream& s,
+							std::map<char, aux::letter_class>& letters) {
 	std::string inp;
 	getline(s, inp);
 	inp = remove_spaces(inp);
-	if (!get_str(&inp, "nonterms="))
-		return false;
+	if (!get_str(&inp, "nonterms=")) return false;
 	while (inp.size()) {
 		char letter = inp[0];
 		inp = inp.substr(1);
 		bool getted = true;
 		getted &= (!inp.size() || get_ch(&inp, ','));
-		if (!getted)
-			return getted;
+		if (!getted) return getted;
 		letters[letter] = aux::letter_class::nonterm;
 	}
 	return true;
 }
-// Парсинг продукций
-bool Parcer::parce_productions(std::stringstream& s, std::map<char, std::vector<std::string>>& productions, std::map<char, aux::letter_class>& letters) {
+// РџР°СЂСЃРёРЅРі РїСЂРѕРґСѓРєС†РёР№
+bool Parcer::parce_productions(
+	std::stringstream& s, std::map<char, std::vector<std::string>>& productions,
+	std::map<char, aux::letter_class>& letters) {
 	std::string production;
 	while (getline(s, production)) {
 		production = remove_spaces(production);
 		std::queue<char> product;
 		make_queue(&product, &production);
-		if (product.empty() || letters[product.front()] != aux::letter_class::nonterm)
+		if (product.empty() ||
+			letters[product.front()] != aux::letter_class::nonterm)
 			return false;
 		char nonterm = product.front();
 		product.pop();
-		if (!get_ch(&product, '='))
-			return false;
+		if (!get_ch(&product, '=')) return false;
 		std::string pr = "";
 		while (!product.empty()) {
 			if (get_ch(&product, '|')) {

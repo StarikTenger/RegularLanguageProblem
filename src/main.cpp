@@ -1,5 +1,5 @@
-#include <iostream>
 #include "objects/CSGrammar.h"
+#include <iostream>
 using namespace std;
 
 int main() {
