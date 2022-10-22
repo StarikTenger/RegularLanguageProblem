@@ -6,6 +6,7 @@ class Nonterminal {
 	string m_name;
 
   public:
-	Nonterminal(string);
+	Nonterminal(string = "");
 	string name() const;
+	void set_name(string);
 };
