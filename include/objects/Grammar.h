@@ -12,6 +12,7 @@ class Grammar {
 	std::set<Nonterminal> m_nonterminals;
 	std::set<Production> m_productions;
 	Nonterminal m_startNonterminal;
+	std::set<Nonterminal> non_generating_nonterminals() const;
 
   public:
 	Grammar();
