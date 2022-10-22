@@ -69,17 +69,3 @@ optional<vector<GeneralLinearProduction>> Grammar::get_linear() {
 	}
 	return linprod;
 }
-
-optional<Grammar> Grammar::Builder::build() const {
-	if (m_terminals.empty()) return nullopt;
-
-	if (m_nonterminals.empty()) return nullopt;
-
-	if (m_productions.empty()) return nullopt;
-
-	if (!m_startNonterminal) return nullopt;
-
-	return optional{Grammar(m_terminals, m_nonterminals, m_productions,
-							m_startNonterminal.value())};
-}
-
