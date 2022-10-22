@@ -14,26 +14,16 @@ vector<variant<Terminal, Nonterminal>> Production::right() const {
 	return m_right;
 }
 
-Production::Builder::Builder()
-	: m_left(nullopt),
-	  m_right(vector<variant<Terminal, Nonterminal>>()) {}
-
-void Production::Builder::set_left(const Nonterminal& nonterminal) {
+void Production::set_left(const Nonterminal& nonterminal) {
 	m_left = nonterminal;
 }
 
-void Production::Builder::add_right_terminal(const Terminal& terminal) {
+void Production::add_right(const Terminal& terminal) {
 	m_right.push_back(terminal);
 }
 
-void Production::Builder::add_right_nonterminal(const Nonterminal& nonterminal) {
+void Production::add_right(const Nonterminal& nonterminal) {
 	m_right.push_back(nonterminal);
-}
-
-optional<Production> Production::Builder::build() const {
-	if (!m_left) return nullopt;
-
-	return Production(m_left.value(), m_right);
 }
 
 bool operator<(const Production& lhs, const Production& rhs) {
