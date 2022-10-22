@@ -27,3 +27,65 @@ void Grammar::add_production(const Production& production) {
 void Grammar::set_start_nonterminal(const Nonterminal& nonterminal) {
 	m_startNonterminal = nonterminal;
 }
+
+void Grammar::get_epsilon_generative(set<Nonterminal>& epss) {
+	for (auto it = m_productions.begin(); it != m_productions.end(); it++) {
+		if (it->right().size() == 1 &&
+			holds_alternative<Terminal>(it->right().at(0)) &&
+			get<Terminal>(it->right().at(0)).name() == '_')
+			epss.insert(it->left());
+	}
+	bool changed = true;
+	while (changed) {
+		changed = false;
+		for (auto it = m_productions.begin(); it != m_productions.end(); it++) {
+			if (epss.count(it->left())) continue;
+			bool all_eps = true;
+			for (int i = 0; i < it->right().size(); i++) {
+				if (holds_alternative<Terminal>(it->right().at(i)) ||
+					!epss.count(get<Nonterminal>(it->right().at(i)))) {
+					all_eps = false;
+					break;
+				}
+				all_eps = false;
+			}
+			changed |= all_eps;
+			if (all_eps) epss.insert(it->left());
+		}
+	}
+}
+
+void Grammar::remove_epsilon_rules(set<Production>& result) {
+	result = m_productions;
+	set<Nonterminal> epss;
+	get_epsilon_generative(epss);
+	for (auto it = m_productions.begin(); it != m_productions.end(); it++) {
+		vector<int> nums;
+		for (int i = 0; i < it->right().size(); i++) {
+			if (holds_alternative<Nonterminal>(it->right().at(i)) &&
+				epss.count(get<Nonterminal>(it->right().at(i)))) {
+				nums.push_back(i);
+			}
+		}
+		for (int i = 0; i < (1 << nums.size()); i++) {
+			int cur_num = 0;
+			auto product = Production(it->left(),
+								  vector<variant<Terminal, Nonterminal>>());
+			for (int j = 0; j < it->right().size(); j++) {
+				while (cur_num != nums.size() - 1 && nums[cur_num] < j) {
+					cur_num++;
+				}
+				if (nums[cur_num] != j || i >> cur_num) {
+					product.add_right(it->right().at(j));
+				}
+			}
+			result.insert(product);
+		}
+	}
+	for (auto it = result.begin(); it != result.end(); it++) {
+		if (it->right().size() == 1 &&
+			holds_alternative<Terminal>(it->right().at(0)) &&
+			get<Terminal>(it->right().at(0)).name() == '_')
+			result.erase(it);
+	}
+}

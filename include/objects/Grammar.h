@@ -2,6 +2,7 @@
 
 #include <optional>
 #include <set>
+#include <queue>
 
 #include "nonterminal.h"
 #include "production.h"
@@ -13,6 +14,8 @@ class Grammar {
 	std::set<Production> m_productions;
 	Nonterminal m_startNonterminal;
 
+    void get_epsilon_generative(set<Nonterminal>& epss);
+
   public:
 	Grammar();
 	Grammar(std::set<Terminal>, std::set<Nonterminal>, std::set<Production>,
@@ -22,4 +25,6 @@ class Grammar {
 	void add_nonterminal(const Nonterminal&);
 	void add_production(const Production&);
 	void set_start_nonterminal(const Nonterminal&);
+
+    void remove_epsilon_rules(set<Production>& result);
 };

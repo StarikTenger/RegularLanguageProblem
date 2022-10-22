@@ -26,7 +26,12 @@ void Production::add_right(const Nonterminal& nonterminal) {
 	m_right.push_back(nonterminal);
 }
 
-string Production::to_str() const{
+void Production::add_right(const variant<Terminal, Nonterminal>& val) {
+	holds_alternative<Terminal>(val) ? add_right(get<Terminal>(val))
+									 : add_right(get<Nonterminal>(val));
+}
+
+string Production::to_str() const {
 	string ans;
 	ans += m_left.name();
 	for (int i = 0; i < m_right.size(); i++) {
