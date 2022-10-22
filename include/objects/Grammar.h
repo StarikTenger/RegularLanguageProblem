@@ -31,6 +31,7 @@ class Grammar {
 		void add_nonterminal(const Nonterminal&);
 		void add_production(const Production&);
 		void set_start_nonterminal(const Nonterminal&);
+		bool is_linear();
 
 		std::optional<Grammar> build() const;
 	};
