@@ -10,6 +10,7 @@
 #include <vector>
 #include <variant>
 #include "production.h"
+#include "Grammar.h"
 
 using namespace std;
 
@@ -48,10 +49,8 @@ class Parcer {
 	// Парсинг нетерминалов
 	bool get_nonterm(queue<char>& input, Nonterminal& nonterm);
 
-	// Парсинг продукций
-	bool parce_productions(stringstream& s, vector<Production>& productions);
-
     public:
 
-	bool parce_from_file();
+    // Парсинг грамматики
+	bool parce_grammar(stringstream& s, Grammar& productions);
 };
