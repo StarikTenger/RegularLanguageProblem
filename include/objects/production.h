@@ -1,4 +1,5 @@
 #pragma once
+
 #include <optional>
 #include <variant>
 #include <vector>
@@ -9,7 +10,6 @@
 using namespace std;
 
 class Production {
-  private:
 	Nonterminal m_left;
 	vector<variant<Terminal, Nonterminal>> m_right;
 
@@ -20,17 +20,19 @@ class Production {
 	Nonterminal left() const;
 	vector<variant<Terminal, Nonterminal>> right() const;
 
+	friend bool operator<(const Production&, const Production&);
+
 	class Builder {
-	  private:
+
 		optional<Nonterminal> m_left;
 		vector<variant<Terminal, Nonterminal>> m_right;
 
 	  public:
 		Builder();
 
-		void set_left(const Nonterminal&);
-		void add_right_terminal(const Terminal&);
-		void add_right_nonterminal(const Nonterminal&);
+		void setLeft(const Nonterminal&);
+		void addRightTerminal(const Terminal&);
+		void addRightNonterminal(const Nonterminal&);
 
 		optional<Production> build() const;
 	};
