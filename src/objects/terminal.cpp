@@ -1,4 +1,4 @@
-#include "terminal.h"
+#include "Terminal.h"
 
 Terminal::Terminal(char name) : m_name(name) {}
 

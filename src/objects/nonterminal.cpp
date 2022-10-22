@@ -1,7 +1,7 @@
-#include "nonterminal.h"
+#include "Nonterminal.h"
 
-Nonterminal::Nonterminal(std::string name) : m_name(name) {}
+Nonterminal::Nonterminal(string name) : m_name(name) {}
 
-std::string Nonterminal::name() const {
+string Nonterminal::name() const {
 	return m_name;
 }

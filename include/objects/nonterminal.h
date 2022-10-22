@@ -3,9 +3,9 @@
 
 class Nonterminal {
   private:
-	std::string m_name;
+	string m_name;
 
   public:
-	Nonterminal(std::string);
-	std::string name() const;
+	Nonterminal(string);
+	string name() const;
 };
