@@ -11,7 +11,6 @@ project (little_onion)
 set(SOURCES
     src/main.cpp
     src/objects/AuxLib.cpp
-	src/objects/CFGrammar.cpp
 	src/objects/Parcer.cpp
 )
 
