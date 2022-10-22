@@ -10,7 +10,7 @@ Nonterminal Production::left() const {
 	return m_left;
 }
 
-vector<variant<Terminal, Nonterminal>> Production::right() const {
+const vector<variant<Terminal, Nonterminal>>& Production::right() const {
 	return m_right;
 }
 

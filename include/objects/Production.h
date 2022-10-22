@@ -22,7 +22,7 @@ class Production {
 	void add_right(const Nonterminal&);
 
 	Nonterminal left() const;
-	vector<variant<Terminal, Nonterminal>> right() const;
+	const vector<variant<Terminal, Nonterminal>>& right() const;
 
 	friend bool operator<(const Production&, const Production&);
 };
