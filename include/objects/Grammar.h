@@ -16,6 +16,8 @@ class Grammar {
 
     void get_epsilon_generative(set<Nonterminal>& epss);
 
+    Nonterminal generate_new_nonterminal();
+
   public:
 	Grammar();
 	Grammar(std::set<Terminal>, std::set<Nonterminal>, std::set<Production>,

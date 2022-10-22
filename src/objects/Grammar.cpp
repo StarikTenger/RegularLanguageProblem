@@ -55,6 +55,16 @@ void Grammar::get_epsilon_generative(set<Nonterminal>& epss) {
 	}
 }
 
+Nonterminal Grammar::generate_new_nonterminal() {
+	for (int i = 0;; i++) {
+		string name = "S" + to_string(i);
+		if (!m_nonterminals.count(name)) {
+			m_nonterminals.insert(Nonterminal(name));
+			return Nonterminal(name);
+		}
+    }
+}
+
 void Grammar::remove_epsilon_rules(set<Production>& result) {
 	result = m_productions;
 	set<Nonterminal> epss;
@@ -87,5 +97,16 @@ void Grammar::remove_epsilon_rules(set<Production>& result) {
 			holds_alternative<Terminal>(it->right().at(0)) &&
 			get<Terminal>(it->right().at(0)).name() == '_')
 			result.erase(it);
+	}
+	if (epss.count(m_startNonterminal)) {
+		Nonterminal new_s = generate_new_nonterminal();
+		auto old_s =
+			Production(new_s, vector<variant<Terminal, Nonterminal>>());
+		old_s.add_right(m_startNonterminal);
+		auto eps = Production(new_s, vector<variant<Terminal, Nonterminal>>());
+		eps.add_right(Terminal('_'));
+		add_production(old_s);
+		add_production(eps);
+		m_startNonterminal = new_s;
 	}
 }
