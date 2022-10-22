@@ -23,6 +23,8 @@ class Production {
 	void add_right(const Terminal&);
 	void add_right(const Nonterminal&);
 
+    set<Nonterminal> right_nonterminals() const;
+
 	Nonterminal left() const;
 	const vector<variant<Terminal, Nonterminal>>& right() const;
 

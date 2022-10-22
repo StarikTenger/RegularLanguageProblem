@@ -14,6 +14,17 @@ const vector<variant<Terminal, Nonterminal>>& Production::right() const {
 	return m_right;
 }
 
+set<Nonterminal> Production::right_nonterminals() const {
+	set<Nonterminal> rns;
+
+	for (auto symbol : right()) {
+		if (holds_alternative<Nonterminal>(symbol))
+			rns.insert(symbol.get<Nonterminal>);
+	}
+
+	return rns;
+}
+
 void Production::set_left(const Nonterminal& nonterminal) {
 	m_left = nonterminal;
 }
