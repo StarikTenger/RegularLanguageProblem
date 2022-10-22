@@ -68,72 +68,109 @@ void Parcer::make_queue(queue<char>* q, string* s) {
 string Parcer::remove_spaces(string s) {
 	string ans;
 	for (int i = 0; i < s.size(); i++) {
-		s[i] != ' ' ? ans.push_back(s[i]) : void();
+		s[i] != ' ' && s[i] != 9 ? ans.push_back(s[i]) : void();
 	}
 	return ans;
 }
+
+// Возврат значений в очередь
+void Parcer::restore(std::queue<char>& stream, std::string save) {
+	std::queue<char> back;
+	while (!stream.empty()) {
+		back.push(stream.front());
+		stream.pop();
+	}
+	for (int i = 0; i < save.size(); i++) {
+		stream.push(save[i]);
+	}
+	while (!back.empty()) {
+		stream.push(back.front());
+		back.pop();
+	}
+}
+
 // Парсинг термов
-bool Parcer::parce_terms(stringstream& s,
-						 map<char, aux::letter_class>& letters) {
-	string inp;
-	getline(s, inp);
-	inp = remove_spaces(inp);
-	if (!get_str(&inp, "terms=")) return false;
-	while (inp.size()) {
-		char letter = inp[0];
-		inp = inp.substr(1);
-		bool getted = true;
-		getted &= (!inp.size() || get_ch(&inp, ','));
-		if (!getted) return getted;
-		letters[letter] = aux::letter_class::term;
+bool Parcer::get_term(std::queue<char>& input, Terminal& nonterm) {
+	if (input.front() == '_' ||
+		(input.front() >= 'a' && input.front() <= 'z')) {
+		nonterm = input.front();
+		input.pop();
+		return true;
 	}
-	return true;
+	return false;
 }
+
 // Парсинг нетерминалов
-bool Parcer::parce_nonterms(stringstream& s,
-							map<char, aux::letter_class>& letters) {
-	string inp;
-	getline(s, inp);
-	inp = remove_spaces(inp);
-	if (!get_str(&inp, "nonterms=")) return false;
-	while (inp.size()) {
-		char letter = inp[0];
-		inp = inp.substr(1);
-		bool getted = true;
-		getted &= (!inp.size() || get_ch(&inp, ','));
-		if (!getted) return getted;
-		letters[letter] = aux::letter_class::nonterm;
+bool Parcer::get_nonterm(std::queue<char>& input, Nonterminal& result) {
+	string nonterm;
+	if (!get_ch(&input, '[')) return false;
+	bool lnow = true;
+	while (!input.empty() && input.front() != ']') {
+		if (is_letter(input.front())) {
+			if (!lnow) {
+				restore(input, "[" + nonterm);
+				return false;
+			}
+			nonterm.push_back(input.front());
+			input.pop();
+			continue;
+		}
+		if (is_num(input.front())) {
+			if (nonterm.empty()) {
+				restore(input, "[" + nonterm);
+				return false;
+			}
+			lnow = false;
+			nonterm.push_back(input.front());
+			input.pop();
+			continue;
+		}
+		restore(input, "[" + nonterm);
+		return false;
 	}
+
+	if (!get_ch(&input, ']')) {
+		restore(input, "[" + nonterm);
+		return false;
+	}
+	result = Nonterminal(nonterm);
 	return true;
 }
+
 // Парсинг продукций
-bool Parcer::parce_productions(
-	stringstream& s, map<char, vector<string>>& productions,
-	map<char, aux::letter_class>& letters) {
-	string production;
-	while (getline(s, production)) {
-		production = remove_spaces(production);
+bool Parcer::parce_grammar(std::stringstream& s, Grammar& grammmar) {
+	string inp;
+	set<char> terms;
+	set<string> nonterms;
+	vector<std::variant<char, std::string>> grammar;
+	bool added = false;
+	while (getline(s, inp)) {
+		inp = remove_spaces(inp);
 		queue<char> product;
-		make_queue(&product, &production);
-		if (product.empty() ||
-			letters[product.front()] != aux::letter_class::nonterm)
+		make_queue(&product, &inp);
+		if (product.empty()) continue;
+		Nonterminal variable("");
+		bool success = get_nonterm(product, variable);
+		if (!success || !get_ch(&product, '-') || !get_ch(&product, '>'))
 			return false;
-		char nonterm = product.front();
-		product.pop();
-		if (!get_ch(&product, '=')) return false;
-		string pr = "";
+		Production production =
+			Production(variable, vector<variant<Terminal, Nonterminal>>());
 		while (!product.empty()) {
-			if (get_ch(&product, '|')) {
-				productions[nonterm].push_back(pr);
-				pr = "";
+			Terminal term('_');
+			Nonterminal nonterm("");
+			if (get_term(product, term)) {
+				production.add_right(term);
 				continue;
 			}
-			if (letters[product.front()] == aux::letter_class::undefined)
-				return false;
-			pr.push_back(product.front());
-			product.pop();
+			if (get_nonterm(product, nonterm)) {
+				production.add_right(nonterm);
+				continue;
+			}
+			return false;
 		}
-		productions[nonterm].push_back(pr);
+		if (production.right().empty()) return false;
+		grammmar.add_production(production);
+		added = true;
 	}
-	return true;
+	return added;
 }
