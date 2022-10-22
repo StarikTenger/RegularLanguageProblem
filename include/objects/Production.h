@@ -30,6 +30,8 @@ class Production {
 
 using Word = vector<Terminal>;
 
+Word operator+(const Word&, const Word&);
+
 // Terminal form of production
 struct TerminalProduction {
 	Nonterminal nonterm_left;

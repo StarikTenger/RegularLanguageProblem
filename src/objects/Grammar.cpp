@@ -10,7 +10,7 @@ Grammar::Grammar() {}
 Grammar::Grammar(set<Terminal> terminals, set<Nonterminal> nonterminals,
 				 set<Production> productions, Nonterminal startNonterminal)
 	: m_terminals(terminals), m_nonterminals(nonterminals),
-	  m_productions(productions), m_startNonterminal(startNonterminal) {}
+	  m_productions(productions), m_start_nonterminal(startNonterminal) {}
 
 void Grammar::add_terminal(const Terminal& terminal) {
 	m_terminals.insert(terminal);
@@ -25,17 +25,6 @@ void Grammar::add_production(const Production& production) {
 }
 
 void Grammar::set_start_nonterminal(const Nonterminal& nonterminal) {
-	m_startNonterminal = nonterminal;
+	m_start_nonterminal = nonterminal;
 }
 
-bool Grammar::is_linear() {
-	int nonterminal_number = 0;
-	for (auto i : m_productions) {
-		for (auto j : i.right()) {
-			if (holds_alternative<Nonterminal>(j)) {
-				nonterminal_number++;
-			}
-		}
-	}
-	return nonterminal_number <= 1;
-}

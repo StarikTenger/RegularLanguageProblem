@@ -16,4 +16,5 @@ class Nonterminal {
 	void set_name(string);
 
 	friend bool operator<(const Nonterminal&, const Nonterminal&);
+	friend bool operator==(const Nonterminal&, const Nonterminal&);
 };

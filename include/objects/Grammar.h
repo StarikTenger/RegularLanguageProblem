@@ -11,7 +11,9 @@ class Grammar {
 	std::set<Terminal> m_terminals;
 	std::set<Nonterminal> m_nonterminals;
 	std::set<Production> m_productions;
-	Nonterminal m_startNonterminal;
+	Nonterminal m_start_nonterminal;
+
+    friend class LinearCFGChecker;
 
   public:
 	Grammar();

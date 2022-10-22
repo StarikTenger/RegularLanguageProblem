@@ -17,3 +17,7 @@ void Nonterminal::set_name(string _name) {
 bool operator<(const Nonterminal& lhs, const Nonterminal& rhs) {
 	return lhs.m_name < rhs.m_name;
 }
+
+bool operator==(const Nonterminal& lhs, const Nonterminal& rhs) {
+	return lhs.m_name == rhs.m_name;
+}
