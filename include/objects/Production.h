@@ -28,7 +28,13 @@ class Production {
 
 using Word = vector<Terminal>;
 
-// Simpler form of production
+// Terminal form of production
+struct TerminalProduction {
+	Nonterminal nonterm_left;
+	Word word_right;
+};
+
+// Linear form of production
 struct LinearProduction {
 	Nonterminal nonterm_left;
 	Nonterminal nonterm_right;
