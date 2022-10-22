@@ -10,16 +10,18 @@
 #include <vector>
 #include <variant>
 
+using namespace std;
+
 class Parcer {
   private:
 	// Считывание символа из очереди
-	bool get_ch(std::queue<char>* source, char sym);
+	bool get_ch(queue<char>* source, char sym);
 
 	// Считывание символа из строки
-	bool get_ch(std::string* source, char sym);
+	bool get_ch(string* source, char sym);
 
 	// Считывание префикса из строки
-	bool get_str(std::string* source, std::string pref);
+	bool get_str(string* source, string pref);
 
 	// Проверка на букву
 	bool is_letter(char c);
@@ -28,13 +30,13 @@ class Parcer {
 	bool is_num(char c);
 
 	// Считывание числа из строки
-	bool get_num(std::string* s, int* ans);
+	bool get_num(string* s, int* ans);
 
 	// Очередь из строки
-	void make_queue(std::queue<char>* q, std::string* s);
+	void make_queue(queue<char>* q, string* s);
 
 	// Функция удаления пробелов из строки
-	std::string remove_spaces(std::string s);
+	string remove_spaces(string s);
 
     // Возврат значений в очередь
 	void restore(std::queue<char>& stream, std::string save);

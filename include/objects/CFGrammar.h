@@ -12,9 +12,9 @@
 
 class CFGrammar {
   public:
-	CFGrammar(std::string filename); // конструктор из файла
-	std::map<char, aux::letter_class>
+	CFGrammar(string filename); // конструктор из файла
+	map<char, aux::letter_class>
 		letters; // Связь: буква -> назначение буквы
-	std::map<char, std::vector<std::string>>
+	map<char, vector<string>>
 		productions; // Связь: нонтерм -> набор продукций нонтерма
 };
