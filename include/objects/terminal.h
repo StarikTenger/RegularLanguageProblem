@@ -1,13 +1,10 @@
-#ifndef TERMINAL_H
-#define TERMINAL_H
+#pragma once
 
 class Terminal {
+  private:
+	char m_name;
 
-  char m_name;
-
-public:
-  Terminal(char);
-  char name() const;
+  public:
+	Terminal(char);
+	char name() const;
 };
-
-#endif // TERMINAL_H

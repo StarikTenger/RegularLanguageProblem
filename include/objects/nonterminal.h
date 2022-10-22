@@ -1,15 +1,11 @@
-#ifndef NONTERMINAL_H
-#define NONTERMINAL_H
-
+#pragma once
 #include <string>
 
 class Nonterminal {
+  private:
+	std::string m_name;
 
-  std::string m_name;
-
-public:
-  Nonterminal(std::string);
-  std::string name() const;
+  public:
+	Nonterminal(std::string);
+	std::string name() const;
 };
-
-#endif // NONTERMINAL_H
