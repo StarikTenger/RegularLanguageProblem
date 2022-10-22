@@ -40,3 +40,5 @@ struct LinearProduction {
 	Nonterminal nonterm_right;
 	pair<Word, Word> words_right;
 };
+
+using GeneralLinearProduction = variant<TerminalProduction, LinearProduction>;
