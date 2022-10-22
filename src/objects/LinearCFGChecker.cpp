@@ -7,8 +7,10 @@ Nonterminal prod_left(const GeneralLinearProduction& prod) {
 	return get<LinearProduction>(prod).nonterm_left;
 }
 
-void LinearCFGChecker::find_langs(const GeneralLinearProduction& cur_prod,
-								  Word word_left, Word word_right, int depth) {
+void LinearCFGChecker::find_langs_rec(const GeneralLinearProduction& cur_prod,
+									  Word word_left, Word word_right,
+									  int depth) {
+    cout << depth << " depth\n";
 	if (depth > max_recursion_depth) {
 		return;
 	}
@@ -26,11 +28,35 @@ void LinearCFGChecker::find_langs(const GeneralLinearProduction& cur_prod,
 		return;
 	}
 
-	// TODO: find lin_prod.nonterm_right in left parts and continue recursion
 	for (const auto& prod : productions) {
 		if (prod_left(prod) == lin_prod.nonterm_right) {
-			find_langs(prod, lin_prod.words_right.first,
-					   lin_prod.words_right.second, depth + 1);
+			find_langs_rec(prod, word_left + lin_prod.words_right.first,
+						   lin_prod.words_right.second + word_right, depth + 1);
+		}
+	}
+}
+
+void LinearCFGChecker::print() {
+    cout << "alpha:\n";
+    for(const auto& w : alpha) {
+        println(w);
+    }
+    cout << "\nbeta:\n";
+	for (const auto& w : beta) {
+		println(w);
+	}
+	cout << "\ngamma:\n";
+	for (const auto& w : gamma) {
+		println(w);
+	}
+}
+
+void LinearCFGChecker::find_langs(
+	const vector<GeneralLinearProduction>& _productions) {
+	productions = _productions;
+	for (const auto& prod : productions) {
+		if (prod_left(prod) == start_symbol) {
+			find_langs_rec(prod, {}, {});
 		}
 	}
 }

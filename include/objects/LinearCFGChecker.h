@@ -21,8 +21,10 @@ class LinearCFGChecker {
 	int max_recursion_depth = 10;
 
 	// Find alpha, beta et gamma
-	void find_langs(const GeneralLinearProduction&, Word word_left,
+	void find_langs_rec(const GeneralLinearProduction&, Word word_left,
 					Word word_right, int depth = 0);
 
   public:
+	void find_langs(const vector<GeneralLinearProduction>& _productions);
+    void print();
 };
