@@ -14,19 +14,19 @@ Grammar::Builder::Builder()
 	: m_terminals(set<Terminal>()), m_nonterminals(set<Nonterminal>()),
 	  m_productions(set<Production>()), m_startNonterminal(nullopt) {}
 
-void Grammar::Builder::addTerminal(const Terminal& terminal) {
+void Grammar::Builder::add_terminal(const Terminal& terminal) {
 	m_terminals.insert(terminal);
 }
 
-void Grammar::Builder::addNonterminal(const Nonterminal& nonterminal) {
+void Grammar::Builder::add_nonterminal(const Nonterminal& nonterminal) {
 	m_nonterminals.insert(nonterminal);
 }
 
-void Grammar::Builder::addProduction(const Production& production) {
+void Grammar::Builder::add_production(const Production& production) {
 	m_productions.insert(production);
 }
 
-void Grammar::Builder::setStartNonterminal(const Nonterminal& nonterminal) {
+void Grammar::Builder::set_start_nonterminal(const Nonterminal& nonterminal) {
 	m_startNonterminal = nonterminal;
 }
 

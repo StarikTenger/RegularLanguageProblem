@@ -1,5 +1,4 @@
-#ifndef GRAMMAR_H
-#define GRAMMAR_H
+#pragma once
 
 #include <optional>
 #include <set>
@@ -28,13 +27,11 @@ class Grammar {
 	  public:
 		Builder();
 
-		void addTerminal(const Terminal&);
-		void addNonterminal(const Nonterminal&);
-		void addProduction(const Production&);
-		void setStartNonterminal(const Nonterminal&);
+		void add_terminal(const Terminal&);
+		void add_nonterminal(const Nonterminal&);
+		void add_production(const Production&);
+		void set_start_nonterminal(const Nonterminal&);
 
 		std::optional<Grammar> build() const;
 	};
 };
-
-#endif // GRAMMAR_H
