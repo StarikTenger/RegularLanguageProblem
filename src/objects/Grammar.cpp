@@ -30,6 +30,18 @@ void Grammar::Builder::set_start_nonterminal(const Nonterminal& nonterminal) {
 	m_startNonterminal = nonterminal;
 }
 
+bool Grammar::is_linear() {
+	int nonterminal_number = 0;
+	for (auto i : m_productions) {
+		for (auto j : i.right()) {
+			if (holds_alternative<Nonterminal>(j)) {
+				nonterminal_number++;
+			}
+		}
+	}
+	return nonterminal_number <= 1;
+}
+
 optional<Grammar> Grammar::Builder::build() const {
 	if (m_terminals.empty()) return nullopt;
 
