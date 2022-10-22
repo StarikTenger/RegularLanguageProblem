@@ -154,20 +154,20 @@ bool Parcer::parce_productions(std::stringstream& s, vector<Production>& product
 			return false;
 		productions.push_back(
 			Production(variable, vector<variant<Terminal, Nonterminal>>()));
-		/*while (!product.empty()) {
+		while (!product.empty()) {
 			Terminal term('_');
 			Nonterminal nonterm("");
 			if (get_term(product, term)) {
-				productions.back().right(term);
+				productions.back().add_right(term);
 				continue;
 			}
 			if (get_nonterm(product, nonterm)) {
-				grammar.back().second.push_back(nonterm);
+				productions.back().add_right(nonterm);
 				continue;
 			}
 			return false;
 		}
-		if (grammar.back().second.empty()) return false;*/
+		if (productions.back().right().empty()) return false;
 	}
-	return !grammar.empty();
+	return productions.empty();
 }
