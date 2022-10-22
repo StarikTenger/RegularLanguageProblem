@@ -9,8 +9,10 @@
 using namespace std;
 
 class Production {
+  private:
 	Nonterminal m_left;
 	vector<variant<Terminal, Nonterminal>> m_right;
+	string to_str() const;
 
   public:
 	Production(const Nonterminal&,

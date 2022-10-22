@@ -8,6 +8,9 @@
 #include <sstream>
 #include <string>
 #include <vector>
+#include <variant>
+#include "production.h"
+#include "Grammar.h"
 
 using namespace std;
 
@@ -37,16 +40,17 @@ class Parcer {
 	// Функция удаления пробелов из строки
 	string remove_spaces(string s);
 
-  public:
+    // Возврат значений в очередь
+	void restore(queue<char>& stream, std::string save);
+
 	// Парсинг термов
-	bool parce_terms(stringstream& s,
-					 map<char, aux::letter_class>& letters);
+	bool get_term(queue<char>& input, Terminal& nonterm);
+
 	// Парсинг нетерминалов
-	bool parce_nonterms(stringstream& s,
-						map<char, aux::letter_class>& letters);
-	// Парсинг продукций
-	bool parce_productions(
-		stringstream& s,
-		map<char, vector<string>>& productions,
-		map<char, aux::letter_class>& letters);
+	bool get_nonterm(queue<char>& input, Nonterminal& nonterm);
+
+    public:
+
+    // Парсинг грамматики
+	bool parce_grammar(stringstream& s, Grammar& productions);
 };

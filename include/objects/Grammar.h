@@ -14,9 +14,11 @@ class Grammar {
 	Nonterminal m_startNonterminal;
 
   public:
+	Grammar();
 	Grammar(std::set<Terminal>, std::set<Nonterminal>, std::set<Production>,
 			Nonterminal);
 
+<<<<<<< HEAD
 	class Builder {
 
 		std::set<Terminal> m_terminals;
@@ -34,4 +36,10 @@ class Grammar {
 		bool is_linear();
 		std::optional<Grammar> build() const;
 	};
+=======
+	void add_terminal(const Terminal&);
+	void add_nonterminal(const Nonterminal&);
+	void add_production(const Production&);
+	void set_start_nonterminal(const Nonterminal&);
+>>>>>>> master
 };
