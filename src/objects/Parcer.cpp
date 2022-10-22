@@ -90,7 +90,7 @@ void Parcer::restore(std::queue<char>& stream, std::string save) {
 }
 
 // Парсинг термов
-bool Parcer::get_term(std::queue<char>& input, char& nonterm) {
+bool Parcer::get_term(std::queue<char>& input, Terminal& nonterm) {
 	if (input.front() == '_' ||
 		(input.front() >= 'a' && input.front() <= 'z')) {
 		nonterm = input.front();
@@ -101,7 +101,8 @@ bool Parcer::get_term(std::queue<char>& input, char& nonterm) {
 }
 
 // Парсинг нетерминалов
-bool Parcer::get_nonterm(std::queue<char>& input, std::string& nonterm) {
+bool Parcer::get_nonterm(std::queue<char>& input, Nonterminal& result) {
+	string nonterm;
 	if (!get_ch(&input, '[')) return false;
 	bool lnow = true;
 	while (!input.empty() && input.front() != ']') {
@@ -132,33 +133,32 @@ bool Parcer::get_nonterm(std::queue<char>& input, std::string& nonterm) {
 		restore(input, "[" + nonterm);
 		return false;
 	}
+	result = Nonterminal(nonterm);
 	return true;
 }
 
 // Парсинг продукций
-bool Parcer::parce_productions(std::stringstream& s) {
-	std::string production;
-	std::set<char> terms;
-	std::set<std::string> nonterms;
-	std::vector<
-		std::pair<std::string, std::vector<std::variant<char, std::string>>>>
-		grammar;
+bool Parcer::parce_productions(std::stringstream& s, vector<Production>& productions) {
+	string production;
+	set<char> terms;
+	set<string> nonterms;
+	vector<std::variant<char, std::string>>	grammar;
 	while (getline(s, production)) {
 		production = remove_spaces(production);
 		queue<char> product;
 		make_queue(&product, &production);
 		if (product.empty()) continue;
-		std::string variable;
+		Nonterminal variable("");
 		bool success = get_nonterm(product, variable);
 		if (!success || !get_ch(&product, '-') || !get_ch(&product, '>'))
 			return false;
-		grammar.push_back(
-			{variable, std::vector<std::variant<char, std::string>>(0)});
-		while (!product.empty()) {
-			char term;
-			std::string nonterm;
+		productions.push_back(
+			Production(variable, vector<variant<Terminal, Nonterminal>>()));
+		/*while (!product.empty()) {
+			Terminal term('_');
+			Nonterminal nonterm("");
 			if (get_term(product, term)) {
-				grammar.back().second.push_back(term);
+				productions.back().right(term);
 				continue;
 			}
 			if (get_nonterm(product, nonterm)) {
@@ -167,7 +167,7 @@ bool Parcer::parce_productions(std::stringstream& s) {
 			}
 			return false;
 		}
-		if (grammar.back().second.empty()) return false;
+		if (grammar.back().second.empty()) return false;*/
 	}
 	return !grammar.empty();
 }

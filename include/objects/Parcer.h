@@ -9,6 +9,7 @@
 #include <string>
 #include <vector>
 #include <variant>
+#include "production.h"
 
 using namespace std;
 
@@ -39,16 +40,16 @@ class Parcer {
 	string remove_spaces(string s);
 
     // Возврат значений в очередь
-	void restore(std::queue<char>& stream, std::string save);
+	void restore(queue<char>& stream, std::string save);
 
 	// Парсинг термов
-	bool get_term(std::queue<char>& input, char& nonterm);
+	bool get_term(queue<char>& input, Terminal& nonterm);
 
 	// Парсинг нетерминалов
-	bool get_nonterm(std::queue<char>& input, std::string& nonterm);
+	bool get_nonterm(queue<char>& input, Nonterminal& nonterm);
 
 	// Парсинг продукций
-	bool parce_productions(std::stringstream& s);
+	bool parce_productions(stringstream& s, vector<Production>& productions);
 
     public:
 
