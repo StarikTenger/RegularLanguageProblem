@@ -1,6 +1,8 @@
 #include "Parcer.h"
 
-bool Parcer::get_ch(std::queue<char>* source, char sym) {
+using namespace std;
+
+bool Parcer::get_ch(queue<char>* source, char sym) {
 	if (source->empty() || source->front() != sym) {
 		return false;
 	}
@@ -9,7 +11,7 @@ bool Parcer::get_ch(std::queue<char>* source, char sym) {
 }
 
 // Считывание символа из строки
-bool Parcer::get_ch(std::string* source, char sym) {
+bool Parcer::get_ch(string* source, char sym) {
 	if (source->size() == 0 || source->operator[](0) != sym) {
 		return false;
 	}
@@ -18,7 +20,7 @@ bool Parcer::get_ch(std::string* source, char sym) {
 }
 
 // Считывание префикса из строки
-bool Parcer::get_str(std::string* source, std::string pref) {
+bool Parcer::get_str(string* source, string pref) {
 	if (source->size() < pref.size() ||
 		source->substr(0, pref.size()) != pref) {
 		return false;
@@ -38,7 +40,7 @@ bool Parcer::is_num(char c) {
 }
 
 // Считывание числа из строки
-bool Parcer::get_num(std::string* s, int* ans) {
+bool Parcer::get_num(string* s, int* ans) {
 	int i = 0;
 	int cur_ans = 0;
 	for (; i < s->size(); i++) {
@@ -50,30 +52,30 @@ bool Parcer::get_num(std::string* s, int* ans) {
 		cur_ans = cur_ans + cur - '0';
 	}
 	*ans = cur_ans;
-	std::string new_s = s->substr(i);
+	string new_s = s->substr(i);
 	*s = new_s;
 	return i != 0;
 }
 
 // Очередь из строки
-void Parcer::make_queue(std::queue<char>* q, std::string* s) {
+void Parcer::make_queue(queue<char>* q, string* s) {
 	for (int i = 0; i != s->size(); i++) {
 		q->push(s->operator[](i));
 	}
 }
 
 // Функция удаления пробелов из строки
-std::string Parcer::remove_spaces(std::string s) {
-	std::string ans;
+string Parcer::remove_spaces(string s) {
+	string ans;
 	for (int i = 0; i < s.size(); i++) {
 		s[i] != ' ' ? ans.push_back(s[i]) : void();
 	}
 	return ans;
 }
 // Парсинг термов
-bool Parcer::parce_terms(std::stringstream& s,
-						 std::map<char, aux::letter_class>& letters) {
-	std::string inp;
+bool Parcer::parce_terms(stringstream& s,
+						 map<char, aux::letter_class>& letters) {
+	string inp;
 	getline(s, inp);
 	inp = remove_spaces(inp);
 	if (!get_str(&inp, "terms=")) return false;
@@ -88,9 +90,9 @@ bool Parcer::parce_terms(std::stringstream& s,
 	return true;
 }
 // Парсинг нетерминалов
-bool Parcer::parce_nonterms(std::stringstream& s,
-							std::map<char, aux::letter_class>& letters) {
-	std::string inp;
+bool Parcer::parce_nonterms(stringstream& s,
+							map<char, aux::letter_class>& letters) {
+	string inp;
 	getline(s, inp);
 	inp = remove_spaces(inp);
 	if (!get_str(&inp, "nonterms=")) return false;
@@ -106,12 +108,12 @@ bool Parcer::parce_nonterms(std::stringstream& s,
 }
 // Парсинг продукций
 bool Parcer::parce_productions(
-	std::stringstream& s, std::map<char, std::vector<std::string>>& productions,
-	std::map<char, aux::letter_class>& letters) {
-	std::string production;
+	stringstream& s, map<char, vector<string>>& productions,
+	map<char, aux::letter_class>& letters) {
+	string production;
 	while (getline(s, production)) {
 		production = remove_spaces(production);
-		std::queue<char> product;
+		queue<char> product;
 		make_queue(&product, &production);
 		if (product.empty() ||
 			letters[product.front()] != aux::letter_class::nonterm)
@@ -119,7 +121,7 @@ bool Parcer::parce_productions(
 		char nonterm = product.front();
 		product.pop();
 		if (!get_ch(&product, '=')) return false;
-		std::string pr = "";
+		string pr = "";
 		while (!product.empty()) {
 			if (get_ch(&product, '|')) {
 				productions[nonterm].push_back(pr);
