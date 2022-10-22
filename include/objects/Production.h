@@ -4,8 +4,8 @@
 #include <variant>
 #include <vector>
 
-#include "nonterminal.h"
-#include "terminal.h"
+#include "Nonterminal.h"
+#include "Terminal.h"
 
 using namespace std;
 
