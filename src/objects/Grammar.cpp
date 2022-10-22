@@ -28,30 +28,46 @@ void Grammar::add_production(const Production& production) {
 void Grammar::set_start_nonterminal(const Nonterminal& nonterminal) {
 	m_startNonterminal = nonterminal;
 }
-<<<<<<< HEAD
 
-bool Grammar::is_linear() {
+optional<vector<GeneralLinearProduction>> Grammar::get_linear() {
 	int nonterminal_number = 0;
-	for (auto i : m_productions) {
-        for (auto j : i.right()) {
-			if (holds_alternative<Nonterminal>(j)) {
-				nonterminal_number++;
-            }
-        }
-    }
-	return nonterminal_number <= 1;
-}
-
-bool Grammar::is_linear() {
-	int nonterminal_number = 0;
+	optional<vector<GeneralLinearProduction>> linprod;
 	for (auto i : m_productions) {
 		for (auto j : i.right()) {
 			if (holds_alternative<Nonterminal>(j)) {
 				nonterminal_number++;
 			}
 		}
+		if (nonterminal_number <= 1) {
+			if (nonterminal_number == 0) {
+				TerminalProduction prod;
+				prod.nonterm_left = i.left();
+				for (auto j : i.right()) {
+					prod.word_right.push_back(j);
+				}
+				linprod.push_back(prod);
+            } else {
+				LinearProduction prod;
+				prod.nonterm_left = i.left();
+				int sygn = 0;
+				for (auto j : i.right()) {
+					if (holds_alternative<Terminal>(j) && sygn == 0) {
+						prod.words_right.first.push_back(j);
+					} else if (holds_alternative<Nonerminal>(j)) {
+						prod.nonterm_right = j;
+						sygn++;
+					} else {
+						prod.words_right.second.push_back(j);
+                    }
+				}
+				linprod.push_back(prod);
+            }
+        } else {
+			return nullopt;
+        }
+		nonterminal_number = 0;
 	}
-	return nonterminal_number <= 1;
+	return linprod;
 }
 
 optional<Grammar> Grammar::Builder::build() const {
@@ -66,5 +82,4 @@ optional<Grammar> Grammar::Builder::build() const {
 	return optional{Grammar(m_terminals, m_nonterminals, m_productions,
 							m_startNonterminal.value())};
 }
-=======
->>>>>>> f5e772db678778c226c92e14c9113c3c27e0cfc6
+
