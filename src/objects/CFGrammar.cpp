@@ -9,13 +9,4 @@ CFGrammar::CFGrammar(std::string filename) { // конструктор из фа
 	std::stringstream buffer;
 	buffer << file.rdbuf();
 	file.close();
-
-	Parcer parcer;
-	bool err;
-	err = !parcer.parce_terms(buffer, letters);
-	if (err) std::cout << "failed to parce terms";
-	err = !parcer.parce_nonterms(buffer, letters);
-	if (err) std::cout << "failed to parce nonterms";
-	err = !parcer.parce_productions(buffer, productions, letters);
-	if (err) std::cout << "failed to parce productions";
 }

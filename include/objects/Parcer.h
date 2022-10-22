@@ -8,6 +8,7 @@
 #include <sstream>
 #include <string>
 #include <vector>
+#include <variant>
 
 class Parcer {
   private:
@@ -35,16 +36,19 @@ class Parcer {
 	// Функция удаления пробелов из строки
 	std::string remove_spaces(std::string s);
 
-  public:
+    // Возврат значений в очередь
+	void restore(std::queue<char>& stream, std::string save);
+
 	// Парсинг термов
-	bool parce_terms(std::stringstream& s,
-					 std::map<char, aux::letter_class>& letters);
+	bool get_term(std::queue<char>& input, char& nonterm);
+
 	// Парсинг нетерминалов
-	bool parce_nonterms(std::stringstream& s,
-						std::map<char, aux::letter_class>& letters);
+	bool get_nonterm(std::queue<char>& input, std::string& nonterm);
+
 	// Парсинг продукций
-	bool parce_productions(
-		std::stringstream& s,
-		std::map<char, std::vector<std::string>>& productions,
-		std::map<char, aux::letter_class>& letters);
+	bool parce_productions(std::stringstream& s);
+
+    public:
+
+	bool parce_from_file();
 };
