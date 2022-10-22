@@ -1,10 +1,13 @@
 #pragma once
 
 class Terminal {
-  private:
+
 	char m_name;
 
   public:
 	Terminal(char);
+
 	char name() const;
+
+	friend bool operator<(const Terminal&, const Terminal&);
 };
