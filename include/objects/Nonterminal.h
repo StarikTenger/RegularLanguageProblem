@@ -1,12 +1,19 @@
 #pragma once
+
 #include <string>
 
+using namespace std;
+
 class Nonterminal {
-  private:
-	string m_name;
+
+	string m_name = "";
 
   public:
-	Nonterminal(string = "");
+	Nonterminal();
+	Nonterminal(const string&);
+
 	string name() const;
 	void set_name(string);
+
+	friend bool operator<(const Nonterminal&, const Nonterminal&);
 };

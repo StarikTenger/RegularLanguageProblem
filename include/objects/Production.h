@@ -1,15 +1,15 @@
 #pragma once
+
 #include <optional>
 #include <variant>
 #include <vector>
 
-#include "nonterminal.h"
-#include "terminal.h"
+#include "Nonterminal.h"
+#include "Terminal.h"
 
 using namespace std;
 
 class Production {
-  private:
 	Nonterminal m_left;
 	vector<variant<Terminal, Nonterminal>> m_right;
 
@@ -20,8 +20,10 @@ class Production {
 	Nonterminal left() const;
 	vector<variant<Terminal, Nonterminal>> right() const;
 
+	friend bool operator<(const Production&, const Production&);
+
 	class Builder {
-	  private:
+
 		optional<Nonterminal> m_left;
 		vector<variant<Terminal, Nonterminal>> m_right;
 

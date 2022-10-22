@@ -35,3 +35,22 @@ optional<Production> Production::Builder::build() const {
 
 	return Production(m_left.value(), m_right);
 }
+
+bool operator<(const Production& lhs, const Production& rhs) {
+	if (lhs.m_left < rhs.m_left) {
+		return true;
+    }
+	if (lhs.m_right.size() < rhs.m_right.size()) {
+		return true;
+	}
+	if (lhs.m_right.size() > rhs.m_right.size()) {
+		return false;
+	}
+    // Equal sized right-parts
+	for (int i = 0; i < lhs.m_right.size(); i++) {
+		if (lhs.m_right[i] < rhs.m_right[i]) {
+			return true;
+		}
+    }
+	return false;
+}

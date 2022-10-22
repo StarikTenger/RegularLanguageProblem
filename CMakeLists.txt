@@ -13,6 +13,10 @@ set(SOURCES
     src/objects/AuxLib.cpp
 	src/objects/CFGrammar.cpp
 	src/objects/Parcer.cpp
+	src/objects/Terminal.cpp
+	src/objects/Nonterminal.cpp
+	src/objects/Production.cpp
+	src/objects/Grammar.cpp
 )
 
 # Add an executable with the above sources

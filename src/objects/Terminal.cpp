@@ -10,3 +10,7 @@ char Terminal::name() const {
 void Terminal::set_name(char name) {
 	m_name = name;
 }
+
+bool operator<(const Terminal& lhs, const Terminal& rhs) {
+	return lhs.m_name < rhs.m_name;
+}
