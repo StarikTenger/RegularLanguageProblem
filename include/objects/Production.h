@@ -1,5 +1,4 @@
 #pragma once
-
 #include <optional>
 #include <variant>
 #include <vector>
@@ -25,4 +24,13 @@ class Production {
 	const vector<variant<Terminal, Nonterminal>>& right() const;
 
 	friend bool operator<(const Production&, const Production&);
+};
+
+using Word = vector<Terminal>;
+
+// Simpler form of production
+struct LinearProduction {
+	Nonterminal nonterm_left;
+	Nonterminal nonterm_right;
+	pair<Word, Word> words_right;
 };
