@@ -6,9 +6,9 @@
 #include <map>
 #include <deque>
 
-#include "nonterminal.h"
-#include "production.h"
-#include "terminal.h"
+#include "Nonterminal.h"
+#include "Production.h"
+#include "Terminal.h"
 
 class Grammar {
 	std::set<Terminal> m_terminals;
@@ -26,7 +26,7 @@ class Grammar {
     Nonterminal generate_new_nonterminal();
 
 	bool is_reachable_from(Nonterminal a, Nonterminal b,
-					  set<Nonterminal>& c = set<Nonterminal>()) const;
+					  set<Nonterminal>& c) const;
 	bool are_mutual_recursive(Nonterminal a, Nonterminal b) const;
 
   public:
@@ -43,7 +43,7 @@ class Grammar {
 
 	bool is_right(set<Nonterminal> nonterminals) const;
 	bool is_left(set<Nonterminal> nonterminals) const;
-	vector<set<Nonterminal>> Grammar::nonterminal_partition() const;
+	vector<set<Nonterminal>> nonterminal_partition() const;
 
     std::optional<bool> regular_closure();
 };

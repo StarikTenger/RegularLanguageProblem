@@ -1,8 +1,8 @@
-#include "grammar.h"
-#include "nonterminal.h"
-#include "production.h"
-#include "terminal.h"
-#include "variant"
+#include "Grammar.h"
+#include "Nonterminal.h"
+#include "Production.h"
+#include "Terminal.h"
+#include <variant>
 
 using namespace std;
 
@@ -158,7 +158,9 @@ bool Grammar::is_reachable_from(Nonterminal a, Nonterminal b,
 }
 
 bool Grammar::are_mutual_recursive(Nonterminal a, Nonterminal b) const {
-	return is_reachable_from(a, b) && is_reachable_from(b, a);
+    set<Nonterminal> fst, snd;
+
+	return is_reachable_from(a, b, fst) && is_reachable_from(b, a, snd);
 }
 
 vector<set<Nonterminal>> Grammar::nonterminal_partition() const {
