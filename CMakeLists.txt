@@ -15,6 +15,7 @@ set(SOURCES
 	src/objects/Nonterminal.cpp
 	src/objects/Production.cpp
 	src/objects/Grammar.cpp
+    src/objects/LinearCFGChecker.cpp
 )
 
 # Add an executable with the above sources

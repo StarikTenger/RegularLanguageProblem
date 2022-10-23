@@ -79,3 +79,16 @@ bool operator<(const Production& lhs, const Production& rhs) {
 	//   }
 	// return false;
 }
+
+Word operator+(const Word& w1, const Word& w2) {
+	auto _w1 = w1;
+	_w1.insert(_w1.end(), w2.begin(), w2.end());
+	return _w1;
+}
+
+void println(const Word& w) {
+    for (const auto& t : w) {
+        cout << t.name();
+    }
+    cout << "\n";
+}

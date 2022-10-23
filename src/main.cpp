@@ -1,14 +1,15 @@
-#include <iostream>
-#include <fstream>
 #include "Grammar.h"
+#include "LinearCFGChecker.h"
 #include "Parcer.h"
+#include <fstream>
+#include <iostream>
 using namespace std;
 
 int main() {
 	Grammar grammar;
 	Parcer parcer;
 	string filename = "test.CFG";
-    ifstream file(filename);
+	ifstream file(filename);
 	if (!file) {
 		cout << "error: cannot find file named " + filename;
 		return 0;
@@ -21,11 +22,20 @@ int main() {
 		return 0;
     }
 
-    auto result = grammar.regular_closure();
+	LinearCFGChecker checker;
+	auto result1 = checker.is_regular(grammar);
+	auto result2 = grammar.regular_closure();
+	optional<bool> result = nullopt;
+	if (result1.has_value()) {
+		result = result1;
+	}
+	if (result2.has_value()) {
+		result = result2;
+	}
 
-    if (result.has_value()) {
+	if (result.has_value()) {
 		cout << (result.value() ? "regular" : "non-regular");
 	} else {
 		cout << "unknown";
-    }
+	}
 }

@@ -9,9 +9,9 @@ using namespace std;
 Grammar::Grammar() {}
 
 Grammar::Grammar(set<Terminal> terminals, set<Nonterminal> nonterminals,
-				 set<Production> productions, Nonterminal startNonterminal)
+				 set<Production> productions, Nonterminal m_start_nonterminal)
 	: m_terminals(terminals), m_nonterminals(nonterminals),
-	  m_productions(productions), m_startNonterminal(startNonterminal) {}
+	  m_productions(productions), m_start_nonterminal(m_start_nonterminal) {}
 
 void Grammar::add_terminal(const Terminal& terminal) {
 	m_terminals.insert(terminal);
@@ -80,7 +80,7 @@ void Grammar::add_production(const Production& production) {
 }
 
 void Grammar::set_start_nonterminal(const Nonterminal& nonterminal) {
-	m_startNonterminal = nonterminal;
+	m_start_nonterminal = nonterminal;
 }
 
 void Grammar::get_epsilon_generative(set<Nonterminal>& epss,
@@ -272,16 +272,16 @@ void Grammar::remove_epsilon_rules(set<Production>& result) {
 		else
 			it++;
 	}
-	if (epss.count(m_startNonterminal)) {
+	if (epss.count(m_start_nonterminal)) {
 		Nonterminal new_s = generate_new_nonterminal();
 		auto old_s =
 			Production(new_s, vector<variant<Terminal, Nonterminal>>());
-		old_s.add_right(m_startNonterminal);
+		old_s.add_right(m_start_nonterminal);
 		auto eps = Production(new_s, vector<variant<Terminal, Nonterminal>>());
 		eps.add_right(Terminal('_'));
 		result.insert(old_s);
 		result.insert(eps);
-		m_startNonterminal = new_s;
+		m_start_nonterminal = new_s;
 	}
 }
 
@@ -363,4 +363,44 @@ std::optional<bool> Grammar::regular_closure() {
 		}
 	}
 	return nullopt;
+}
+optional<vector<GeneralLinearProduction>> Grammar::get_linear() const {
+	int nonterminal_number = 0;
+	vector<GeneralLinearProduction> linprod = {};
+	for (auto production : m_productions) {
+		for (auto symbol : production.right()) {
+			if (holds_alternative<Nonterminal>(symbol)) {
+				nonterminal_number++;
+			}
+		}
+		if (nonterminal_number <= 1) {
+			if (nonterminal_number == 0) {
+				TerminalProduction prod;
+				prod.nonterm_left = production.left();
+				for (auto j : production.right()) {
+					prod.word_right.push_back(get<Terminal>(j));
+				}
+				linprod.push_back(prod);
+            } else {
+				LinearProduction prod;
+				prod.nonterm_left = production.left();
+				int sygn = 0;
+				for (auto j : production.right()) {
+					if (holds_alternative<Terminal>(j) && sygn == 0) {
+						prod.words_right.first.push_back(get<Terminal>(j));
+					} else if (holds_alternative<Nonterminal>(j)) {
+						prod.nonterm_right = get<Nonterminal>(j);
+						sygn++;
+					} else {
+						prod.words_right.second.push_back(get<Terminal>(j));
+                    }
+				}
+				linprod.push_back(prod);
+            }
+        } else {
+			return nullopt;
+        }
+		nonterminal_number = 0;
+	}
+	return linprod;
 }
