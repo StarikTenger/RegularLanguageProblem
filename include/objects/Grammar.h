@@ -14,7 +14,7 @@ class Grammar {
 	std::set<Terminal> m_terminals;
 	std::set<Nonterminal> m_nonterminals;
 	std::set<Production> m_productions;
-	Nonterminal m_startNonterminal = Nonterminal("S");
+	Nonterminal m_start_nonterminal = Nonterminal("S");
 	std::set<Nonterminal> non_generating_nonterminals() const;
 	void remove_epsilon_rules(set<Production>& result);
 
@@ -46,4 +46,5 @@ class Grammar {
 	vector<set<Nonterminal>> nonterminal_partition() const;
 
     std::optional<bool> regular_closure();
+	optional<vector<GeneralLinearProduction>> get_linear() const;
 };
