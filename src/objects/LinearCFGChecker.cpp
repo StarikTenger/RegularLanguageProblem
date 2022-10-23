@@ -142,6 +142,12 @@ optional<bool> LinearCFGChecker::is_regular(const Grammar& grammar) {
 	productions = *lin_form;
 	for (const auto& prod : productions) {
 		find_langs(prod_left(prod));
+		for (auto word : alpha) {
+			alpha1 += word_to_string(word);
+        }
+		for (auto word : beta) {
+			beta1 += word_to_string(word);
+		}
 		if (auto res = find_unic_words(); res != nullopt) {
             return res;
         }
