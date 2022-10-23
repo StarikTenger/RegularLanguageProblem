@@ -143,10 +143,17 @@ optional<bool> LinearCFGChecker::is_regular(const Grammar& grammar) {
 	productions = *lin_form;
 	for (const auto& prod : productions) {
 		find_langs(prod_left(prod));
+        bool empty_words = false;
 		for (auto word : alpha) {
+			if (word.size() == 0) {
+				empty_words = true;
+            }
 			alpha1 += word_to_string(word);
         }
 		for (auto word : beta) {
+			if (word.size() == 0) {
+				empty_words = true;
+			}
 			beta1 += word_to_string(word);
 		}
         cout << "TY PIDOR ------------------------------------------------ <3\n";
