@@ -16,7 +16,8 @@ int main() {
 	stringstream buffer;
 	buffer << file.rdbuf();
 	file.close();
-	parcer.parce_grammar(buffer, grammar);
+	cout << file.rdbuf();
+	cout << parcer.parce_grammar(buffer, grammar);
 
     auto result = grammar.regular_closure();
 
