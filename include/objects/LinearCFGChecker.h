@@ -7,10 +7,12 @@ using namespace std;
 class LinearCFGChecker {
   private:
 	// S →∗ α S β
-	set<Word> alpha;
-	set<Word> beta;
+	vector<Word> alpha;
+	string alpha1;
+	vector<Word> beta;
+	string beta1;
 	// S →∗ γ
-	set<Word> gamma;
+	vector<Word> gamma;
 
 	// Rules
 	vector<GeneralLinearProduction> productions;
@@ -21,8 +23,10 @@ class LinearCFGChecker {
 	int max_recursion_depth = 10;
 
 	// Find alpha, beta et gamma
-	void find_langs_rec(const GeneralLinearProduction&, Word word_left,
-					Word word_right, int depth = 0);
+	/*void find_langs_rec(const GeneralLinearProduction&, Word word_left,
+					Word word_right, int depth = 0);*/
+	optional<bool> find_unic_words();
+	int find_unic_word_gamma(int num);
 
   public:
 	void find_langs(const vector<GeneralLinearProduction>& _productions);
