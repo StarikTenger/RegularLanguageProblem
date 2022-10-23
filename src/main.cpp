@@ -33,9 +33,10 @@ int main() {
 		result = result2;
 	}
 
+    ofstream outfile("result");
 	if (result.has_value()) {
-		cout << (result.value() ? "regular" : "non-regular");
+		outfile << (result.value() ? "regular" : "non-regular");
 	} else {
-		cout << "unknown";
+		outfile << "unknown";
 	}
 }
