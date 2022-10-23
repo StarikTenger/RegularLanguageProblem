@@ -31,27 +31,26 @@ void Grammar::set_start_nonterminal(const Nonterminal& nonterminal) {
 
 optional<vector<GeneralLinearProduction>> Grammar::get_linear() const {
 	int nonterminal_number = 0;
-	vector<GeneralLinearProduction> linprod;
-	for (auto i : m_productions) {
-		for (auto j : i.right()) {
-			if (holds_alternative<Nonterminal>(j)) {
+	vector<GeneralLinearProduction> linprod = {};
+	for (auto production : m_productions) {
+		for (auto symbol : production.right()) {
+			if (holds_alternative<Nonterminal>(symbol)) {
 				nonterminal_number++;
 			}
 		}
 		if (nonterminal_number <= 1) {
-			linprod = {};
 			if (nonterminal_number == 0) {
 				TerminalProduction prod;
-				prod.nonterm_left = i.left();
-				for (auto j : i.right()) {
+				prod.nonterm_left = production.left();
+				for (auto j : production.right()) {
 					prod.word_right.push_back(get<Terminal>(j));
 				}
 				linprod.push_back(prod);
             } else {
 				LinearProduction prod;
-				prod.nonterm_left = i.left();
+				prod.nonterm_left = production.left();
 				int sygn = 0;
-				for (auto j : i.right()) {
+				for (auto j : production.right()) {
 					if (holds_alternative<Terminal>(j) && sygn == 0) {
 						prod.words_right.first.push_back(get<Terminal>(j));
 					} else if (holds_alternative<Nonterminal>(j)) {

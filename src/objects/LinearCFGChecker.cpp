@@ -148,6 +148,8 @@ optional<bool> LinearCFGChecker::is_regular(const Grammar& grammar) {
 		for (auto word : beta) {
 			beta1 += word_to_string(word);
 		}
+        cout << "TY PIDOR ------------------------------------------------ <3\n";
+		print();
 		if (auto res = find_unic_words(); res != nullopt) {
             return res;
         }
