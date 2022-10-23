@@ -1,6 +1,6 @@
-#include "production.h"
-#include "grammar.h"
-#include "terminal.h"
+#include "Production.h"
+
+using namespace std;
 
 Production::Production(const Nonterminal& left,
 					   const vector<variant<Terminal, Nonterminal>>& right)

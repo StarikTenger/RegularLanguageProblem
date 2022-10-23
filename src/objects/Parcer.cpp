@@ -138,11 +138,10 @@ bool Parcer::get_nonterm(std::queue<char>& input, Nonterminal& result) {
 }
 
 // Парсинг продукций
-bool Parcer::parce_grammar(std::stringstream& s, Grammar& grammmar) {
+bool Parcer::parce_grammar(std::stringstream& s, Grammar& grammar) {
 	string inp;
 	set<char> terms;
 	set<string> nonterms;
-	vector<std::variant<char, std::string>> grammar;
 	bool added = false;
 	while (getline(s, inp)) {
 		inp = remove_spaces(inp);
@@ -155,21 +154,24 @@ bool Parcer::parce_grammar(std::stringstream& s, Grammar& grammmar) {
 			return false;
 		Production production =
 			Production(variable, vector<variant<Terminal, Nonterminal>>());
+		grammar.add_nonterminal(variable);
 		while (!product.empty()) {
 			Terminal term('_');
 			Nonterminal nonterm("");
 			if (get_term(product, term)) {
 				production.add_right(term);
+				grammar.add_terminal(term);
 				continue;
 			}
 			if (get_nonterm(product, nonterm)) {
 				production.add_right(nonterm);
+				grammar.add_nonterminal(nonterm);
 				continue;
 			}
 			return false;
 		}
 		if (production.right().empty()) return false;
-		grammmar.add_production(production);
+		grammar.add_production(production);
 		added = true;
 	}
 	return added;
