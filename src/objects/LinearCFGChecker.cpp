@@ -26,7 +26,7 @@ void LinearCFGChecker::find_langs_rec(Nonterminal start_symbol,
 	const auto& lin_prod = get<LinearProduction>(cur_prod);
 	if (lin_prod.nonterm_right == start_symbol) {
 		alpha.push_back(word_left + lin_prod.words_right.first);
-		beta.push_back(lin_prod.words_right.first + word_right);
+		beta.push_back(lin_prod.words_right.second + word_right);
 		return;
 	}
 
@@ -52,7 +52,7 @@ int LinearCFGChecker::find_unic_word_gamma(int num) {
 		Word w = gamma[i];
 		string str = word_to_string(w);
 		bool flag = true;
-		for (int j = 0; j < gamma.size(); i++) {
+		for (int j = 0; j < gamma.size(); j++) {
 			if (i != j) {
 				string str1 = word_to_string(gamma[j]);
 				if (str == str1) {
@@ -65,6 +65,7 @@ int LinearCFGChecker::find_unic_word_gamma(int num) {
 			return i;
 		}
 	}
+	return -1;
 }
 
 optional<Word> find_unic_word(vector<Word> al, string al1) {
@@ -88,7 +89,7 @@ optional<bool> LinearCFGChecker::find_unic_words() {
 		if (alpha1.find(str) == -1 && beta1.find(str) == -1) {
 			return false;
 		} else {
-			i = find_unic_word_gamma(i);
+			i = find_unic_word_gamma(i+1);
 		}
 	}
 	Word wgamma = gamma[j];
@@ -154,5 +155,6 @@ optional<bool> LinearCFGChecker::is_regular(const Grammar& grammar) {
             return res;
         }
 	}
+	cout << "nullept\n";
 	return nullopt;
 }
