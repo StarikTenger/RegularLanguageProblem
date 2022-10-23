@@ -26,7 +26,7 @@ void LinearCFGChecker::find_langs_rec(Nonterminal start_symbol,
 	const auto& lin_prod = get<LinearProduction>(cur_prod);
 	if (lin_prod.nonterm_right == start_symbol) {
 		alpha.push_back(word_left + lin_prod.words_right.first);
-		beta.push_back(lin_prod.words_right.first + word_right);
+		beta.push_back(lin_prod.words_right.second + word_right);
 		return;
 	}
 
@@ -52,7 +52,7 @@ int LinearCFGChecker::find_unic_word_gamma(int num) {
 		Word w = gamma[i];
 		string str = word_to_string(w);
 		bool flag = true;
-		for (int j = 0; j < gamma.size(); i++) {
+		for (int j = 0; j < gamma.size(); j++) {
 			if (i != j) {
 				string str1 = word_to_string(gamma[j]);
 				if (str == str1) {
@@ -142,10 +142,17 @@ optional<bool> LinearCFGChecker::is_regular(const Grammar& grammar) {
 	productions = *lin_form;
 	for (const auto& prod : productions) {
 		find_langs(prod_left(prod));
+        bool empty_words = false;
 		for (auto word : alpha) {
+			if (word.size() == 0) {
+				empty_words = true;
+            }
 			alpha1 += word_to_string(word);
         }
 		for (auto word : beta) {
+			if (word.size() == 0) {
+				empty_words = true;
+			}
 			beta1 += word_to_string(word);
 		}
         cout << "TY PIDOR ------------------------------------------------ <3\n";
