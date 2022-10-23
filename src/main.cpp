@@ -16,7 +16,10 @@ int main() {
 	stringstream buffer;
 	buffer << file.rdbuf();
 	file.close();
-	cout << parcer.parce_grammar(buffer, grammar);
+	if (!parcer.parce_grammar(buffer, grammar)) {
+		cout << "syntax-error";
+		return 0;
+    }
 
     auto result = grammar.regular_closure();
 
