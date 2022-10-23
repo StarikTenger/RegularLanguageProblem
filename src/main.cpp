@@ -28,9 +28,10 @@ int main() {
 	optional<bool> result = nullopt;
 	if (result1.has_value()) {
 		result = result1;
-	}
-	if (result2.has_value()) {
-		result = result2;
+	} else {
+		if (result2.has_value()) {
+			result = result2;
+		}
 	}
 
     ofstream outfile("result");
