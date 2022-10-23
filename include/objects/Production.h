@@ -3,6 +3,7 @@
 #include <optional>
 #include <variant>
 #include <vector>
+#include <set>
 
 #include "Nonterminal.h"
 #include "Terminal.h"
@@ -25,6 +26,8 @@ class Production {
 
 	Nonterminal left() const;
 	const vector<variant<Terminal, Nonterminal>>& right() const;
+
+    set<Nonterminal> right_nonterminals() const;
 
 	friend bool operator<(const Production&, const Production&);
 };
