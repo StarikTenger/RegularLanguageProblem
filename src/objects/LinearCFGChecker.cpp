@@ -123,7 +123,10 @@ void LinearCFGChecker::find_langs(
 	const vector<GeneralLinearProduction>& _productions,
 	int _max_recursion_depth) {
 
-    max_recursion_depth = _max_recursion_depth;
+    alpha = {};
+    beta = {};
+    gamma = {};
+	max_recursion_depth = _max_recursion_depth;
 	productions = _productions;
 	for (const auto& prod : productions) {
 		if (prod_left(prod) == start_symbol) {
