@@ -23,11 +23,12 @@ class Production {
 	void set_left(const Nonterminal&);
 	void add_right(const Terminal&);
 	void add_right(const Nonterminal&);
+	void add_right(const variant<Terminal, Nonterminal>&);
+
+    set<Nonterminal> right_nonterminals() const;
 
 	Nonterminal left() const;
 	const vector<variant<Terminal, Nonterminal>>& right() const;
-
-    set<Nonterminal> right_nonterminals() const;
 
 	friend bool operator<(const Production&, const Production&);
 };
