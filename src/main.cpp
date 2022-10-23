@@ -17,7 +17,7 @@ int main() {
 	buffer << file.rdbuf();
 	file.close();
 	if (!parcer.parce_grammar(buffer, grammar)) {
-		cout << "Syntax_error";
+		cout << "SYNTAX";
 		return 0;
     }
 
