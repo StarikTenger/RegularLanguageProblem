@@ -13,8 +13,9 @@ class Grammar {
 	std::set<Terminal> m_terminals;
 	std::set<Nonterminal> m_nonterminals;
 	std::set<Production> m_productions;
-	Nonterminal m_startNonterminal;
+	Nonterminal m_startNonterminal = Nonterminal("S");
 	std::set<Nonterminal> non_generating_nonterminals() const;
+	void remove_epsilon_rules(set<Production>& result);
 
     friend class LinearCFGChecker;
 
@@ -35,9 +36,11 @@ class Grammar {
 	void add_production(const Production&);
 	void set_start_nonterminal(const Nonterminal&);
 
-    void remove_epsilon_rules(set<Production>& result);
+    void clear_up();
 
 	bool is_right(set<Nonterminal> nonterminals) const;
 	bool is_left(set<Nonterminal> nonterminals) const;
 	set<set<Nonterminal>> Grammar::nonterminal_partition() const;
+
+    std::optional<bool> regular_closure();
 };

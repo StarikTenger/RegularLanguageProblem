@@ -16,5 +16,14 @@ int main() {
 	buffer << file.rdbuf();
 	file.close();
 	parcer.parce_grammar(buffer, grammar);
-	cout << "Regular Language Problem";
+
+    auto result = grammar.regular_closure();
+
+    if (result.has_value()) {
+		cout << (result.value() ? "regular" : "nonregular");
+	} else {
+		cout << "unknown";
+    }
+
+	cout << "\nRegular Language Problem";
 }
