@@ -83,31 +83,56 @@ void Grammar::set_start_nonterminal(const Nonterminal& nonterminal) {
 	m_startNonterminal = nonterminal;
 }
 
-void Grammar::get_epsilon_generative(set<Nonterminal>& epss) {
+void Grammar::get_epsilon_generative(set<Nonterminal>& epss,
+									 set<Nonterminal>& useless) {
+	map<Nonterminal, int> count;
+	map<Production, bool> was;
+
+	for (auto it = m_productions.begin(); it != m_productions.end(); it++)
+		count[it->left()]++;
+
 	for (auto it = m_productions.begin(); it != m_productions.end(); it++) {
-		if (it->right().size() == 1 &&
-			holds_alternative<Terminal>(it->right().at(0)) &&
-			get<Terminal>(it->right().at(0)).name() == '_')
+		bool eps = true;
+		auto right = it->right();
+		for (int i = 0; i < right.size(); i++) {
+			if (holds_alternative<Nonterminal>(right[i]) ||
+				(get<Terminal>(right[i]).name() != '_')) {
+				eps = false;
+				break;
+			}
+		}
+		if (eps) {
+			was[*it] = true;
 			epss.insert(it->left());
+			count[it->left()]--;
+		}
 	}
 	bool changed = true;
 	while (changed) {
 		changed = false;
 		for (auto it = m_productions.begin(); it != m_productions.end(); it++) {
-			if (epss.count(it->left())) continue;
-			bool all_eps = true;
-			for (int i = 0; i < it->right().size(); i++) {
-				if (holds_alternative<Terminal>(it->right().at(i)) ||
+			bool all_eps = !was[*it];
+			for (int i = 0; (i < it->right().size() && all_eps); i++) {
+				if (holds_alternative<Terminal>(it->right().at(i)) &&
+					get<Terminal>(it->right().at(i)).name() != '_') {
+					all_eps = false;
+				}
+				if (holds_alternative<Nonterminal>(it->right().at(i)) &&
 					!epss.count(get<Nonterminal>(it->right().at(i)))) {
 					all_eps = false;
-					break;
 				}
-				all_eps = false;
 			}
 			changed |= all_eps;
-			if (all_eps) epss.insert(it->left());
+			if (all_eps) {
+				was[*it] = true;
+				epss.insert(it->left());
+				count[it->left()]--;
+			}
 		}
 	}
+	for (auto it = count.begin(); it != count.end(); it++) {
+		if (it->second <= 0) useless.insert(it->first);
+    }
 }
 
 bool Grammar::is_reachable_from(Nonterminal a, Nonterminal b,
@@ -130,7 +155,7 @@ bool Grammar::is_reachable_from(Nonterminal a, Nonterminal b,
 	}
 
 	return false;
-}   
+}
 
 bool Grammar::are_mutual_recursive(Nonterminal a, Nonterminal b) const {
 	return is_reachable_from(a, b) && is_reachable_from(b, a);
@@ -200,30 +225,39 @@ Nonterminal Grammar::generate_new_nonterminal() {
 			m_nonterminals.insert(Nonterminal(name));
 			return Nonterminal(name);
 		}
-    }
+	}
 }
 
 void Grammar::remove_epsilon_rules(set<Production>& result) {
-	result = m_productions;
-	set<Nonterminal> epss;
-	get_epsilon_generative(epss);
+	set<Nonterminal> epss, useless;
+	get_epsilon_generative(epss, useless);
 	for (auto it = m_productions.begin(); it != m_productions.end(); it++) {
 		vector<int> nums;
 		for (int i = 0; i < it->right().size(); i++) {
 			if (holds_alternative<Nonterminal>(it->right().at(i)) &&
-				epss.count(get<Nonterminal>(it->right().at(i)))) {
+				epss.count(get<Nonterminal>(it->right().at(i))))
 				nums.push_back(i);
-			}
+			if (holds_alternative<Terminal>(it->right().at(i)) &&
+				get<Terminal>(it->right().at(i)).name() == '_')
+				nums.push_back(i);
 		}
-		for (int i = 1; i < (1 << nums.size()); i++) {
+		for (int i = 0; i < (1 << nums.size()); i++) {
 			int cur_num = 0;
 			auto product = Production(it->left(),
-								  vector<variant<Terminal, Nonterminal>>());
+									  vector<variant<Terminal, Nonterminal>>());
 			for (int j = 0; j < it->right().size(); j++) {
-				while (cur_num != nums.size() - 1 && nums[cur_num] < j) {
+				while (cur_num < nums.size() && nums[cur_num] < j) {
 					cur_num++;
 				}
-				if (nums[cur_num] != j || (i >> cur_num) == 0) {
+				bool not_useless = true;
+				not_useless &=
+					!(holds_alternative<Terminal>(it->right().at(j)) &&
+					 get<Terminal>(it->right().at(j)).name() == '_');
+				not_useless &=
+					!(holds_alternative<Nonterminal>(it->right().at(j)) &&
+					 useless.count(get<Nonterminal>(it->right().at(j))));
+				not_useless &= ((i >> cur_num) == 0);
+				if ((cur_num >= nums.size() || nums[cur_num] != j)|| not_useless) {
 					product.add_right(it->right().at(j));
 				}
 			}
@@ -231,13 +265,10 @@ void Grammar::remove_epsilon_rules(set<Production>& result) {
 		}
 	}
 	for (auto it = result.begin(); it != result.end();) {
-		if (it->right().size() == 1 &&
-			holds_alternative<Terminal>(it->right().at(0)) &&
-			get<Terminal>(it->right().at(0)).name() == '_') {
+		if (it->right().size() == 0)
 			it = result.erase(it);
-		} else {
+		else
 			it++;
-        }
 	}
 	if (epss.count(m_startNonterminal)) {
 		Nonterminal new_s = generate_new_nonterminal();
@@ -289,46 +320,45 @@ void Grammar::clear_up() {
 	auto non_generating = non_generating_nonterminals();
 	for (auto nonterm : non_generating) {
 		for (auto it = m_productions.begin(); it != m_productions.end();) {
- 			bool to_del = false;
+			bool to_del = false;
 			if (nonterm == it->left()) {
 				to_del = true;
-            }
+			}
 			for (auto lexem : it->right()) {
 				if (holds_alternative<Nonterminal>(lexem) &&
 					get<Nonterminal>(lexem) == nonterm) {
 					to_del = true;
 					break;
-                }
-            }
+				}
+			}
 			if (to_del) {
 				it = m_productions.erase(it);
-			}
-			else
+			} else
 				++it;
-        }
+		}
 	}
 	auto nonterm = non_generating.begin();
-    for (auto it = m_nonterminals.begin(); it != m_nonterminals.end();) {
+	for (auto it = m_nonterminals.begin(); it != m_nonterminals.end();) {
 		if (nonterm == non_generating.end()) break;
 		if (*it == *nonterm) {
 			it = m_nonterminals.erase(it);
 			nonterm++;
 		} else {
 			it++;
-        }
-    }
+		}
+	}
 	set<Production> new_nonterminals;
 	remove_epsilon_rules(new_nonterminals);
 	m_productions = new_nonterminals;
- }
+}
 
 std::optional<bool> Grammar::regular_closure() {
-	 clear_up();
-	 auto partitions = nonterminal_partition();
-	 for (auto partition : partitions) {
-		 if (is_left(partition) && is_right(partition)) {
-			 return false;
-		 }
-	 }
-	 return nullopt;
- }
+	clear_up();
+	auto partitions = nonterminal_partition();
+	for (auto partition : partitions) {
+		if (is_left(partition) && is_right(partition)) {
+			return false;
+		}
+	}
+	return nullopt;
+}

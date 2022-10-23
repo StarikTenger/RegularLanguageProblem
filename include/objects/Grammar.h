@@ -20,7 +20,8 @@ class Grammar {
 
     friend class LinearCFGChecker;
 
-    void get_epsilon_generative(set<Nonterminal>& epss);
+    void get_epsilon_generative(set<Nonterminal>& epss,
+								set<Nonterminal>& useless);
 
     Nonterminal generate_new_nonterminal();
 
