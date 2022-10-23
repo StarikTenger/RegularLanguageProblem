@@ -18,13 +18,13 @@ class LinearCFGChecker {
 	vector<GeneralLinearProduction> productions;
 
 	// WARNING: hardcode!
-	int max_recursion_depth = 10;
+	int max_recursion_depth = 15;
 
 	// Find alpha, beta et gamma
 	void find_langs_rec(Nonterminal start_symbol,
 						const GeneralLinearProduction& prod, Word word_left,
 						Word word_right, int depth = 0);
-	optional<bool> find_unic_words();
+	optional<bool> find_unic_words(bool empty);
 	int find_unic_word_gamma(int num);
 
   public:

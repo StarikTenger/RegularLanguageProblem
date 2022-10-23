@@ -78,7 +78,7 @@ optional<Word> find_unic_word(vector<Word> al, string al1) {
 	return nullopt;
 }
 
-optional<bool> LinearCFGChecker::find_unic_words() {
+optional<bool> LinearCFGChecker::find_unic_words(bool empty) {
 	int i = find_unic_word_gamma(0);
 	if (i == -1) return nullopt;
 	int j = i;
@@ -86,7 +86,7 @@ optional<bool> LinearCFGChecker::find_unic_words() {
 		Word w = gamma[i];
 		string str = word_to_string(w);
 		//добавить проверку на пустые переходы
-		if (alpha1.find(str) == -1 && beta1.find(str) == -1) {
+		if (alpha1.find(str) == -1 && beta1.find(str) == -1 && !empty) {
 			return false;
 		} else {
 			i = find_unic_word_gamma(i+1);
@@ -156,12 +156,9 @@ optional<bool> LinearCFGChecker::is_regular(const Grammar& grammar) {
 			}
 			beta1 += word_to_string(word);
 		}
-        cout << "TY PIDOR ------------------------------------------------ <3\n";
-		print();
-		if (auto res = find_unic_words(); res != nullopt) {
+		if (auto res = find_unic_words(empty_words); res != nullopt) {
             return res;
         }
 	}
-	cout << "nullept\n";
 	return nullopt;
 }

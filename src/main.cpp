@@ -20,6 +20,10 @@ int main() {
 
     LinearCFGChecker checker;
 	auto is_reg = checker.is_regular(grammar);
-	cout << (is_reg == nullopt ? "who knows" : *is_reg) << "\n";
+	if (is_reg == nullopt) {
+		cout << "aaaaa\n";
+	} else {
+		cout << *is_reg << "\n";
+	}
 	cout << "Regular Language Problem";
 }
