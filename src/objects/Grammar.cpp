@@ -2,6 +2,7 @@
 #include "nonterminal.h"
 #include "production.h"
 #include "terminal.h"
+#include "variant"
 
 using namespace std;
 
@@ -14,6 +15,60 @@ Grammar::Grammar(set<Terminal> terminals, set<Nonterminal> nonterminals,
 
 void Grammar::add_terminal(const Terminal& terminal) {
 	m_terminals.insert(terminal);
+}
+
+set<Nonterminal> Grammar::non_generating_nonterminals() const {
+	map<Nonterminal, bool> is_generating;
+
+	for (const auto& nonterminal : m_nonterminals) {
+		is_generating[nonterminal] = false;
+	}
+
+	map<Production, int> counter;
+
+	for (const auto& production : m_productions) {
+		counter[production] = production.right_nonterminals().size();
+	}
+
+	map<Nonterminal, set<Production>> concerned_productions;
+
+	for (const auto& nonterminal : m_nonterminals) {
+		concerned_productions[nonterminal] = set<Production>();
+
+		for (const auto& production : m_productions) {
+			if (production.right_nonterminals().count(nonterminal))
+				concerned_productions[nonterminal].insert(production);
+		}
+	}
+
+	queue<Nonterminal> q;
+
+	for (const auto& [production, count] : counter) {
+		if (!count) q.push(production.left());
+	}
+
+	while (!q.empty()) {
+		auto nonterminal = q.front();
+
+		q.pop();
+
+		for (const auto& production : concerned_productions[nonterminal]) {
+			if (--counter[production] == 0) {
+				auto left = production.left();
+
+				is_generating[left] = true;
+				q.push(left);
+			}
+		}
+	}
+
+	set<Nonterminal> result;
+
+	for (const auto& [nonterminal, generating] : is_generating) {
+		if (generating) result.insert(nonterminal);
+	}
+
+	return result;
 }
 
 void Grammar::add_nonterminal(const Nonterminal& nonterminal) {
@@ -109,4 +164,15 @@ void Grammar::remove_epsilon_rules(set<Production>& result) {
 		add_production(eps);
 		m_startNonterminal = new_s;
 	}
+}
+bool Grammar::is_linear() {
+	int nonterminal_number = 0;
+	for (auto i : m_productions) {
+        for (auto j : i.right()) {
+			if (holds_alternative<Nonterminal>(j)) {
+				nonterminal_number++;
+            }
+        }
+    }
+	return nonterminal_number <= 1;
 }
