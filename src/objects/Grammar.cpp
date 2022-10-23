@@ -39,28 +39,29 @@ optional<vector<GeneralLinearProduction>> Grammar::get_linear() {
 			}
 		}
 		if (nonterminal_number <= 1) {
+			linprod.value() = {};
 			if (nonterminal_number == 0) {
 				TerminalProduction prod;
 				prod.nonterm_left = i.left();
 				for (auto j : i.right()) {
-					prod.word_right.push_back(j);
+					prod.word_right.push_back(get<Terminal>(j));
 				}
-				linprod.push_back(prod);
+				linprod.value().push_back(prod);
             } else {
 				LinearProduction prod;
 				prod.nonterm_left = i.left();
 				int sygn = 0;
 				for (auto j : i.right()) {
 					if (holds_alternative<Terminal>(j) && sygn == 0) {
-						prod.words_right.first.push_back(j);
-					} else if (holds_alternative<Nonerminal>(j)) {
-						prod.nonterm_right = j;
+						prod.words_right.first.push_back(get<Terminal>(j));
+					} else if (holds_alternative<Nonterminal>(j)) {
+						prod.nonterm_right = get<Nonterminal>(j);
 						sygn++;
 					} else {
-						prod.words_right.second.push_back(j);
+						prod.words_right.second.push_back(get<Terminal>(j));
                     }
 				}
-				linprod.push_back(prod);
+				linprod.value().push_back(prod);
             }
         } else {
 			return nullopt;
