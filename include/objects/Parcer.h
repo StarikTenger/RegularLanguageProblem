@@ -1,5 +1,4 @@
 #pragma once
-#include "AuxLib.h"
 #include <fstream>
 #include <iostream>
 #include <map>
@@ -9,7 +8,7 @@
 #include <string>
 #include <vector>
 #include <variant>
-#include "production.h"
+#include "Production.h"
 #include "Grammar.h"
 
 using namespace std;

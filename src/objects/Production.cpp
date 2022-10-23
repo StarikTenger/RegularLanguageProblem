@@ -1,6 +1,6 @@
-#include "production.h"
-#include "grammar.h"
-#include "terminal.h"
+#include "Production.h"
+
+using namespace std;
 
 Production::Production(const Nonterminal& left,
 					   const vector<variant<Terminal, Nonterminal>>& right)
@@ -12,6 +12,17 @@ Nonterminal Production::left() const {
 
 const vector<variant<Terminal, Nonterminal>>& Production::right() const {
 	return m_right;
+}
+
+set<Nonterminal> Production::right_nonterminals() const {
+	set<Nonterminal> rns;
+
+	for (auto symbol : right()) {
+		if (holds_alternative<Nonterminal>(symbol))
+			rns.insert(get<Nonterminal>(symbol));
+	}
+
+	return rns;
 }
 
 void Production::set_left(const Nonterminal& nonterminal) {
@@ -26,7 +37,12 @@ void Production::add_right(const Nonterminal& nonterminal) {
 	m_right.push_back(nonterminal);
 }
 
-string Production::to_str() const{
+void Production::add_right(const variant<Terminal, Nonterminal>& val) {
+	holds_alternative<Terminal>(val) ? add_right(get<Terminal>(val))
+									 : add_right(get<Nonterminal>(val));
+}
+
+string Production::to_str() const {
 	string ans;
 	ans += m_left.name();
 	for (int i = 0; i < m_right.size(); i++) {

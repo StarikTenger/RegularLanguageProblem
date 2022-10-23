@@ -11,7 +11,7 @@ void LinearCFGChecker::find_langs_rec(Nonterminal start_symbol,
 									  const GeneralLinearProduction& cur_prod,
 									  Word word_left, Word word_right,
 									  int depth) {
-	// cout << depth << " depth\n";
+
 	if (depth > max_recursion_depth) {
 		return;
 	}
@@ -19,7 +19,7 @@ void LinearCFGChecker::find_langs_rec(Nonterminal start_symbol,
 	if (holds_alternative<TerminalProduction>(cur_prod)) {
 		gamma.push_back(word_left +
 						get<TerminalProduction>(cur_prod).word_right +
-						word_right);
+					 word_right);
 		return;
 	}
 
@@ -58,7 +58,7 @@ int LinearCFGChecker::find_unic_word_gamma(int num) {
 				if (str == str1) {
 					flag = false;
 					break;
-				}
+}
 			}
 		}
 		if (flag) {
@@ -105,11 +105,11 @@ optional<bool> LinearCFGChecker::find_unic_words(bool empty) {
 }
 
 void LinearCFGChecker::print() {
-	cout << "alpha:\n";
+    cout << "alpha:\n";
 	for (const auto& w : alpha) {
-		println(w);
-	}
-	cout << "\nbeta:\n";
+        println(w);
+    }
+    cout << "\nbeta:\n";
 	for (const auto& w : beta) {
 		println(w);
 	}
@@ -158,7 +158,7 @@ optional<bool> LinearCFGChecker::is_regular(const Grammar& grammar) {
 		}
 		if (auto res = find_unic_words(empty_words); res != nullopt) {
             return res;
-        }
+		}
 	}
 	return nullopt;
 }

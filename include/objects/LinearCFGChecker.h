@@ -23,7 +23,7 @@ class LinearCFGChecker {
 	// Find alpha, beta et gamma
 	void find_langs_rec(Nonterminal start_symbol,
 						const GeneralLinearProduction& prod, Word word_left,
-						Word word_right, int depth = 0);
+					Word word_right, int depth = 0);
 	optional<bool> find_unic_words(bool empty);
 	int find_unic_word_gamma(int num);
 
@@ -32,5 +32,5 @@ class LinearCFGChecker {
 					int _max_recursion_depth = 10);
     // Entery point
 	optional<bool> is_regular(const Grammar& grammar);
-	void print();
+    void print();
 };

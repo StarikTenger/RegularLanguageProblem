@@ -10,7 +10,6 @@ project (little_onion)
 # Create a sources variable with a link to all cpp files to compile
 set(SOURCES
     src/main.cpp
-    src/objects/AuxLib.cpp
 	src/objects/Parcer.cpp
 	src/objects/Terminal.cpp
 	src/objects/Nonterminal.cpp

@@ -1,0 +1,17 @@
+diff a/src/main.cpp b/src/main.cpp	(rejected hunks)
+@@ -19,11 +20,11 @@ int main() {
+ 
+     auto result = grammar.regular_closure();
+ 
++    ofstream output_file("result");
++
+     if (result.has_value()) {
+-		cout << (result.value() ? "regular" : "non-regular");
++		output_file << (result.value() ? "regular" : "non-regular");
+ 	} else {
+-		cout << "unknown";
++		output_file << "unknown";
+     }
+-
+-	cout << "\nRegular Language Problem";
+ }
