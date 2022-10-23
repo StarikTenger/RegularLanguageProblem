@@ -142,6 +142,8 @@ optional<bool> LinearCFGChecker::is_regular(const Grammar& grammar) {
 	productions = *lin_form;
 	for (const auto& prod : productions) {
 		find_langs(prod_left(prod));
+        cout << "TY PIDOR ------------------------------------------------ <3\n";
+		print();
 		if (auto res = find_unic_words(); res != nullopt) {
             return res;
         }
