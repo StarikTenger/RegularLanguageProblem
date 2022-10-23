@@ -110,7 +110,8 @@ void Grammar::get_epsilon_generative(set<Nonterminal>& epss) {
 	}
 }
 
-bool Grammar::is_reachable_from(Nonterminal a, Nonterminal b) const {
+bool Grammar::is_reachable_from(Nonterminal a, Nonterminal b,
+								set<Nonterminal>& c) const {
 	if (a == b) {
 		return true;
 	}
@@ -118,30 +119,33 @@ bool Grammar::is_reachable_from(Nonterminal a, Nonterminal b) const {
 	for (auto production : m_productions) {
 		if (production.left() == a) {
 			for (auto nonterminal : production.right_nonterminals()) {
-				if (is_reachable_from(nonterminal, b)) {
-					return true;
+				if (c.count(nonterminal) == 0) {
+					c.insert(nonterminal);
+					if (is_reachable_from(nonterminal, b, c)) {
+						return true;
+					}
 				}
 			}
 		}
 	}
 
 	return false;
-}
+}   
 
 bool Grammar::are_mutual_recursive(Nonterminal a, Nonterminal b) const {
 	return is_reachable_from(a, b) && is_reachable_from(b, a);
 }
 
-set<set<Nonterminal>> Grammar::nonterminal_partition() const {
-	set<set<Nonterminal>> result;
+vector<set<Nonterminal>> Grammar::nonterminal_partition() const {
+	vector<set<Nonterminal>> result;
 
 	for (auto a : m_nonterminals) {
 		bool done = false;
 
-		for (auto p : result) {
-			for (auto b : m_nonterminals) {
+		for (int i = 0; i < result.size(); i++) {
+			for (auto b : result[i]) {
 				if (are_mutual_recursive(a, b)) {
-					p.insert(a);
+					result[i].insert(a);
 					done = true;
 				}
 			}
@@ -149,7 +153,7 @@ set<set<Nonterminal>> Grammar::nonterminal_partition() const {
 
 		if (!done) {
 			set<Nonterminal> p = {a};
-			result.insert(p);
+			result.push_back(p);
 		}
 	}
 
@@ -242,8 +246,8 @@ void Grammar::remove_epsilon_rules(set<Production>& result) {
 		old_s.add_right(m_startNonterminal);
 		auto eps = Production(new_s, vector<variant<Terminal, Nonterminal>>());
 		eps.add_right(Terminal('_'));
-		add_production(old_s);
-		add_production(eps);
+		result.insert(old_s);
+		result.insert(eps);
 		m_startNonterminal = new_s;
 	}
 }
