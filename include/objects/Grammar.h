@@ -4,6 +4,7 @@
 #include <set>
 #include <queue>
 #include <map>
+#include <deque>
 
 #include "nonterminal.h"
 #include "production.h"

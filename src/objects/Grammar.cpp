@@ -65,7 +65,7 @@ set<Nonterminal> Grammar::non_generating_nonterminals() const {
 	set<Nonterminal> result;
 
 	for (const auto& [nonterminal, generating] : is_generating) {
-		if (generating) result.insert(nonterminal);
+		if (!generating) result.insert(nonterminal);
 	}
 
 	return result;
@@ -161,20 +161,25 @@ bool Grammar::is_left(set<Nonterminal> nonterminals) const {
 		Nonterminal a = production.left();
 
 		if (nonterminals.count(a) > 0) {
-			vector<variant<Terminal, Nonterminal>> l, r = production.right();
+			deque<variant<Terminal, Nonterminal>> l, r;
+			auto right = production.right();
+			for (int i = 0; i < right.size(); i++) {
+				r.push_back(right[i]);
+			}
 			optional<Nonterminal> b;
 
-			while (!b.has_value() || r.empty()) {
-				l.push_back(r.back());
+			while (!b.has_value() && !r.empty()) {
+				l.push_back(r.front());
 
-				if (holds_alternative<Nonterminal>(r.back())) {
-					if (nonterminals.count(get<Nonterminal>(r.back())) > 0) {
-						b = get<Nonterminal>(r.back());
+				if (holds_alternative<Nonterminal>(r.front())) {
+					if (nonterminals.count(get<Nonterminal>(r.front())) > 0) {
+						b = get<Nonterminal>(r.front());
 					}
 				}
 
-				r.pop_back();
+				r.pop_front();
 			}
+
 			if (b.has_value() && !l.empty()) {
 				return true;
 			}
@@ -248,19 +253,23 @@ bool Grammar::is_right(set<Nonterminal> nonterminals) const {
 		Nonterminal a = production.left();
 
 		if (nonterminals.count(a) > 0) {
-			vector<variant<Terminal, Nonterminal>> l, r = production.right();
+			deque<variant<Terminal, Nonterminal>> l, r;
+			auto right = production.right();
+			for (int i = 0; i < right.size(); i++) {
+				r.push_back(right[i]);
+			}
 			optional<Nonterminal> b;
 
-			while (!b.has_value() || r.empty()) {
-				l.push_back(r.back());
+			while (!b.has_value() && !r.empty()) {
+				l.push_back(r.front());
 
-				if (holds_alternative<Nonterminal>(r.back())) {
-					if (nonterminals.count(get<Nonterminal>(r.back())) > 0) {
-						b = get<Nonterminal>(r.back());
+				if (holds_alternative<Nonterminal>(r.front())) {
+					if (nonterminals.count(get<Nonterminal>(r.front())) > 0) {
+						b = get<Nonterminal>(r.front());
 					}
 				}
 
-				r.pop_back();
+				r.pop_front();
 			}
 
 			if (b.has_value() && !r.empty()) {
