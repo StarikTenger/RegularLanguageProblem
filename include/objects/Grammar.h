@@ -24,5 +24,5 @@ class Grammar {
 	void add_nonterminal(const Nonterminal&);
 	void add_production(const Production&);
 	void set_start_nonterminal(const Nonterminal&);
-	optional<vector<GeneralLinearProduction>> get_linear();
+	optional<vector<GeneralLinearProduction>> get_linear() const;
 };

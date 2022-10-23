@@ -120,17 +120,31 @@ void LinearCFGChecker::print() {
 
 void LinearCFGChecker::find_langs(
 	Nonterminal start_symbol,
-	const vector<GeneralLinearProduction>& _productions,
 	int _max_recursion_depth) {
 
     alpha = {};
     beta = {};
     gamma = {};
 	max_recursion_depth = _max_recursion_depth;
-	productions = _productions;
 	for (const auto& prod : productions) {
 		if (prod_left(prod) == start_symbol) {
 			find_langs_rec(start_symbol, prod, {}, {});
 		}
 	}
+}
+
+optional<bool> LinearCFGChecker::is_regular(const Grammar& grammar) {
+	auto lin_form = grammar.get_linear();
+    if (lin_form == nullopt) {
+        return nullopt;
+    }
+
+	productions = *lin_form;
+	for (const auto& prod : productions) {
+		find_langs(prod_left(prod));
+		if (auto res = find_unic_words(); res != nullopt) {
+            return res;
+        }
+	}
+	return nullopt;
 }

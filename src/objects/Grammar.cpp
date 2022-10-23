@@ -29,9 +29,9 @@ void Grammar::set_start_nonterminal(const Nonterminal& nonterminal) {
 	m_start_nonterminal = nonterminal;
 }
 
-optional<vector<GeneralLinearProduction>> Grammar::get_linear() {
+optional<vector<GeneralLinearProduction>> Grammar::get_linear() const {
 	int nonterminal_number = 0;
-	optional<vector<GeneralLinearProduction>> linprod;
+	vector<GeneralLinearProduction> linprod;
 	for (auto i : m_productions) {
 		for (auto j : i.right()) {
 			if (holds_alternative<Nonterminal>(j)) {
@@ -39,14 +39,14 @@ optional<vector<GeneralLinearProduction>> Grammar::get_linear() {
 			}
 		}
 		if (nonterminal_number <= 1) {
-			linprod.value() = {};
+			linprod = {};
 			if (nonterminal_number == 0) {
 				TerminalProduction prod;
 				prod.nonterm_left = i.left();
 				for (auto j : i.right()) {
 					prod.word_right.push_back(get<Terminal>(j));
 				}
-				linprod.value().push_back(prod);
+				linprod.push_back(prod);
             } else {
 				LinearProduction prod;
 				prod.nonterm_left = i.left();
@@ -61,7 +61,7 @@ optional<vector<GeneralLinearProduction>> Grammar::get_linear() {
 						prod.words_right.second.push_back(get<Terminal>(j));
                     }
 				}
-				linprod.value().push_back(prod);
+				linprod.push_back(prod);
             }
         } else {
 			return nullopt;

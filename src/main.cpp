@@ -1,6 +1,7 @@
 #include <iostream>
 #include "Grammar.h"
 #include "Parcer.h"
+#include "LinearCFGChecker.h"
 using namespace std;
 
 int main() {
@@ -16,5 +17,9 @@ int main() {
 	buffer << file.rdbuf();
 	file.close();
 	parcer.parce_grammar(buffer, grammar);
+
+    LinearCFGChecker checker;
+	auto is_reg = checker.is_regular(grammar);
+	cout << (is_reg == nullopt ? "who knows" : *is_reg);
 	cout << "Regular Language Problem";
 }

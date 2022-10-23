@@ -29,7 +29,8 @@ class LinearCFGChecker {
 
   public:
 	void find_langs(Nonterminal start_symbol,
-					const vector<GeneralLinearProduction>& _productions,
 					int _max_recursion_depth = 10);
+    // Entery point
+	optional<bool> is_regular(const Grammar& grammar);
 	void print();
 };
