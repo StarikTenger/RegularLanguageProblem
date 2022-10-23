@@ -145,6 +145,7 @@ bool Parcer::parce_grammar(std::stringstream& s, Grammar& grammar) {
 	bool added = false;
 	while (getline(s, inp)) {
 		inp = remove_spaces(inp);
+		cout << inp;
 		queue<char> product;
 		make_queue(&product, &inp);
 		if (product.empty()) continue;
