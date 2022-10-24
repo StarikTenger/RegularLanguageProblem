@@ -359,10 +359,10 @@ std::optional<bool> Grammar::regular_closure() {
 	auto partitions = nonterminal_partition();
 	for (auto partition : partitions) {
 		if (is_left(partition) && is_right(partition)) {
-			return nullopt;
+			return false;
 		}
 	}
-	return true;
+	return nullopt;
 }
 optional<vector<GeneralLinearProduction>> Grammar::get_linear() const {
 	int nonterminal_number = 0;
