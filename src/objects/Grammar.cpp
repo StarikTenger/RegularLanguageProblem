@@ -359,7 +359,7 @@ std::optional<bool> Grammar::regular_closure() {
 	auto partitions = nonterminal_partition();
 	for (auto partition : partitions) {
 		if (is_left(partition) && is_right(partition)) {
-			return false;
+			return nullopt;
 		}
 	}
 	return true;
