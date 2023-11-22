@@ -132,7 +132,7 @@ void Grammar::get_epsilon_generative(set<Nonterminal>& epss,
 	}
 	for (auto it = count.begin(); it != count.end(); it++) {
 		if (it->second <= 0) useless.insert(it->first);
-    }
+	}
 }
 
 bool Grammar::is_reachable_from(Nonterminal a, Nonterminal b,
@@ -158,7 +158,7 @@ bool Grammar::is_reachable_from(Nonterminal a, Nonterminal b,
 }
 
 bool Grammar::are_mutual_recursive(Nonterminal a, Nonterminal b) const {
-    set<Nonterminal> fst, snd;
+	set<Nonterminal> fst, snd;
 
 	return is_reachable_from(a, b, fst) && is_reachable_from(b, a, snd);
 }
@@ -254,12 +254,13 @@ void Grammar::remove_epsilon_rules(set<Production>& result) {
 				bool not_useless = true;
 				not_useless &=
 					!(holds_alternative<Terminal>(it->right().at(j)) &&
-					 get<Terminal>(it->right().at(j)).name() == '_');
+					  get<Terminal>(it->right().at(j)).name() == '_');
 				not_useless &=
 					!(holds_alternative<Nonterminal>(it->right().at(j)) &&
-					 useless.count(get<Nonterminal>(it->right().at(j))));
+					  useless.count(get<Nonterminal>(it->right().at(j))));
 				not_useless &= ((i >> cur_num) == 0);
-				if ((cur_num >= nums.size() || nums[cur_num] != j)|| not_useless) {
+				if ((cur_num >= nums.size() || nums[cur_num] != j) ||
+					not_useless) {
 					product.add_right(it->right().at(j));
 				}
 			}
@@ -381,7 +382,7 @@ optional<vector<GeneralLinearProduction>> Grammar::get_linear() const {
 					prod.word_right.push_back(get<Terminal>(j));
 				}
 				linprod.push_back(prod);
-            } else {
+			} else {
 				LinearProduction prod;
 				prod.nonterm_left = production.left();
 				int sygn = 0;
@@ -393,13 +394,13 @@ optional<vector<GeneralLinearProduction>> Grammar::get_linear() const {
 						sygn++;
 					} else {
 						prod.words_right.second.push_back(get<Terminal>(j));
-                    }
+					}
 				}
 				linprod.push_back(prod);
-            }
-        } else {
+			}
+		} else {
 			return nullopt;
-        }
+		}
 		nonterminal_number = 0;
 	}
 	return linprod;
