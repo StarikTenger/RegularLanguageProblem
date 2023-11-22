@@ -1,5 +1,4 @@
 #include "Grammar.h"
-#include "LinearCFGChecker.h"
 #include "Parcer.h"
 #include <fstream>
 #include <iostream>
@@ -20,21 +19,9 @@ int main() {
 	if (!parcer.parce_grammar(buffer, grammar)) {
 		cout << "Syntax error";
 		return 0;
-    }
-
-	LinearCFGChecker checker;
-	auto result1 = checker.is_regular(grammar);
-	auto result2 = grammar.regular_closure();
-	optional<bool> result = nullopt;
-	if (result1.has_value()) {
-		result = result1;
-	} else {
-		if (result2.has_value()) {
-			result = result2;
-		}
 	}
-
-    ofstream outfile("result");
+	auto result = grammar.regular_closure();
+	ofstream outfile("result");
 	if (result.has_value()) {
 		outfile << (result.value() ? "regular" : "non-regular");
 	} else {
