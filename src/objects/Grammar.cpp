@@ -200,12 +200,14 @@ bool Grammar::is_left(set<Nonterminal> nonterminals) const {
 			optional<Nonterminal> b;
 
 			while (!b.has_value() && !r.empty()) {
-				l.push_back(r.front());
-
 				if (holds_alternative<Nonterminal>(r.front())) {
 					if (nonterminals.count(get<Nonterminal>(r.front())) > 0) {
 						b = get<Nonterminal>(r.front());
 					}
+				}
+
+				if (!b.has_value()) {
+					l.push_back(r.front());
 				}
 
 				r.pop_front();
@@ -299,12 +301,14 @@ bool Grammar::is_right(set<Nonterminal> nonterminals) const {
 			optional<Nonterminal> b;
 
 			while (!b.has_value() && !r.empty()) {
-				l.push_back(r.front());
-
 				if (holds_alternative<Nonterminal>(r.front())) {
 					if (nonterminals.count(get<Nonterminal>(r.front())) > 0) {
 						b = get<Nonterminal>(r.front());
 					}
+				}
+
+				if (!b.has_value()) {
+					l.push_back(r.front());
 				}
 
 				r.pop_front();
